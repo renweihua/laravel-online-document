@@ -1,0 +1,13 @@
+{
+    "name": "Docs",
+    "alias": "docs",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\Docs\\Providers\\DocsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
