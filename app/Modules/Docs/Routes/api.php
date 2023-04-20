@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CorsMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/docs', function (Request $request) {
-    return $request->user();
+Route::prefix('')->middleware([
+    CorsMiddleware::class,
+])->group(function () {
+    // Auth
+    Route::prefix('auth')->group(function () {
+        // 登录
+        Route::match(['get', 'post'], 'login', 'AuthController@login');
+        // // 登录会员信息
+        // Route::match(['get', 'post'], 'me', 'AuthController@me')->middleware(CheckAuth::class);
+        // // 退出登录
+        // Route::post('logout', 'AuthController@logout');
+    });
 });

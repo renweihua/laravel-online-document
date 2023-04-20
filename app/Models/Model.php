@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Models\SoftDelete\SoftDelete;
+use App\Traits\Instance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 class Model extends EloquentModel
 {
+    use Instance;
     use SoftDelete;
     use HasFactory;
 

@@ -2,26 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-
-class User extends Authenticatable
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    // 连接User库
+    protected $connection = 'user_mysql';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $primaryKey = 'user_id';
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -30,15 +17,46 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
+    public function userInfo()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'user_id');
+    }
+
     /**
-     * The attributes that should be cast.
+     * 通过用户名搜索
      *
-     * @var array<string, string>
+     * @param string $user_name
+     *
+     * @return mixed
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function getUserByName(string $user_name)
+    {
+        return $this->where('user_name', $user_name)->first();
+    }
+
+    /**
+     * 通过邮箱进行搜索
+     *
+     * @param  string  $user_email
+     *
+     * @return mixed
+     */
+    public function getUserByEmail(string $user_email)
+    {
+        return $this->where('user_email', $user_email)->first();
+    }
+
+    /**
+     * 通过手机号进行搜索
+     *
+     * @param  string  $user_mobile
+     *
+     * @return mixed
+     */
+    public function getUserByMobile(string $user_mobile)
+    {
+        return $this->where('user_mobile', $user_mobile)->first();
+    }
 }

@@ -54,9 +54,11 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
+            'prefix' => env('DB_PREFIX', ''),
             'prefix_indexes' => true,
             'strict' => true,
+            // 解决mysql only_full_group_by问题（或者 strict == false）
+            'modes' => ['NO_ENGINE_SUBSTITUTION'],
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
@@ -92,7 +94,7 @@ return [
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
-            'prefix' => '',
+            'prefix' => env('DB_PREFIX', ''),
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
@@ -107,7 +109,7 @@ return [
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
-            'prefix' => '',
+            'prefix' => env('DB_PREFIX', ''),
             'prefix_indexes' => true,
         ],
 
@@ -159,9 +161,28 @@ return [
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '1'),
+            'database' => env('REDIS_CACHE_DB', 1),
         ],
 
+        // API：登录Token存储的库
+        'token' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'name' => env('REDIS_NAME', 'default'),
+            'password' => env('REDIS_PASSWORD', ''),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_TOKEN_DB', 2),
+        ],
+
+        // 队列库
+        'queue' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'name' => env('REDIS_NAME', 'default'),
+            'password' => env('REDIS_PASSWORD', ''),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_QUEUE_DB', 3),
+        ],
     ],
 
 ];
