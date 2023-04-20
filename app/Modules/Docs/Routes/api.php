@@ -30,7 +30,7 @@ Route::prefix('')->middleware([
 
     Route::prefix('')->group(function () {
         // 项目列表
-        Route::match(['get', 'post'], 'projects', 'AuthController@login');
         Route::get('projects', 'ProjectController@index');
+        Route::get('project-detail', 'ProjectController@detail');
     });
 });

@@ -54,16 +54,19 @@ class Model extends EloquentModel
      */
     protected $guarded = [];
 
-    public static function firstByWhere($where)
-    {
-        return self::where($where)->first();
-    }
-
     // 定义按月分表的组成部分，避免逻辑报错
     const MIN_TABLE    = '';// 表名最小的月份
     const MONTH_FORMAT = '';
+
     public function setMonthTable(string $month = '')
     {
         return $this;
+    }
+
+    // 时间戳格式化
+    public function getTimeFormattingAttribute($value)
+    {
+        if(!isset($this->attributes['created_time'])) return '';
+        return formatting_timestamp($this->attributes['created_time'], false);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Docs;
 
 use App\Models\Model;
+use App\Models\UserInfo;
 
 class Project extends Model
 {
@@ -16,10 +17,8 @@ class Project extends Model
         return $text;
     }
 
-    // 时间戳格式化
-    public function getTimeFormattingAttribute($value)
+    public function userInfo()
     {
-        if(!isset($this->attributes['created_time'])) return '';
-        return formatting_timestamp($this->attributes['created_time'], false);
+        return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
 }
