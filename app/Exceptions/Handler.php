@@ -124,6 +124,9 @@ class Handler extends ExceptionHandler
         if ($http_status == 23000){
             $http_status = HttpStatus::BAD_REQUEST;
             $message = '请检测SQL语句是否某些字段不可为null';
+        }else if ($http_status == 1049){
+            $http_status = HttpStatus::BAD_REQUEST;
+            $message = '请检测数据库是否创建！';
         }
 
         // 发送报警邮件
