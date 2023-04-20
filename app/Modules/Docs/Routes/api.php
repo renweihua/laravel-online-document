@@ -27,4 +27,10 @@ Route::prefix('')->middleware([
         // // 退出登录
         // Route::post('logout', 'AuthController@logout');
     });
+
+    Route::prefix('')->group(function () {
+        // 项目列表
+        Route::match(['get', 'post'], 'projects', 'AuthController@login');
+        Route::get('projects', 'ProjectController@index');
+    });
 });
