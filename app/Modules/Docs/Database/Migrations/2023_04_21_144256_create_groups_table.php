@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateGroupsTable extends Migration
 {
@@ -17,7 +18,7 @@ class CreateGroupsTable extends Migration
         if (Schema::hasTable($table)) return;
         Schema::create($table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->id('');
+            $table->id();
             $table->bigInteger('project_id')->unsigned()->default(0)->comment('项目Id');
             $table->boolean('group_type')->unsigned()->default(0)->comment('分组类型：0.文档');
             $table->string('group_name', 100)->default('')->comment('分组名称');

@@ -7,6 +7,11 @@
  *
  */
 
+function getLoginUserId()
+{
+    return 1;
+}
+
 //快速修改.env文件
 function modifyEnv(array $data)
 {

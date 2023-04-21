@@ -32,5 +32,12 @@ Route::prefix('')->middleware([
         // 项目列表
         Route::get('projects', 'ProjectController@index');
         Route::get('project-detail', 'ProjectController@detail');
+
+
+        // 文档列表
+        Route::get('docs', 'DocController@index');
+        Route::get('doc-detail', 'DocController@detail');
+        Route::post('doc-create', 'DocController@createOrUpdate');
+        Route::put('doc-update', 'DocController@createOrUpdate');
     });
 });

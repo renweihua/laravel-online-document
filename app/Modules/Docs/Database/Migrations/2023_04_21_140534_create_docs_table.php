@@ -18,7 +18,7 @@ class CreateDocsTable extends Migration
         if (Schema::hasTable($table)) return;
         Schema::create($table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->id('');
+            $table->id();
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->bigInteger('project_id')->unsigned()->default(0)->comment('项目Id');
             $table->bigInteger('group_id')->unsigned()->default(0)->comment('分组Id');

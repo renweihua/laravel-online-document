@@ -4,6 +4,10 @@ namespace App\Exceptions;
 
 use App\Constants\HttpStatus;
 use App\Traits\Json;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
