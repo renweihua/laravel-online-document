@@ -29,17 +29,23 @@ Route::prefix('')->middleware([
     });
 
     Route::prefix('')->group(function () {
-        // 项目列表
+        // 项目管理
         Route::get('projects', 'ProjectController@index');
         Route::get('project-detail', 'ProjectController@detail');
 
-        // API列表
+        // 分组管理
+        Route::get('groups', 'GroupController@index');
+        Route::get('group-detail', 'GroupController@detail');
+        Route::post('group-create', 'GroupController@createOrUpdate');
+        Route::put('group-update', 'GroupController@createOrUpdate');
+
+        // API管理
         Route::get('apis', 'ApiController@index');
         Route::get('api-detail', 'ApiController@detail');
         Route::post('api-create', 'ApiController@createOrUpdate');
         Route::put('api-update', 'ApiController@createOrUpdate');
 
-        // 文档列表
+        // 文档管理
         Route::get('docs', 'DocController@index');
         Route::get('doc-detail', 'DocController@detail');
         Route::post('doc-create', 'DocController@createOrUpdate');

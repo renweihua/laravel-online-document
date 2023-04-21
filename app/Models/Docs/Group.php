@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 
 class Group extends Model
 {
+    protected $primaryKey = 'group_id';
     protected $appends = ['time_formatting'];
 
     public function project()
