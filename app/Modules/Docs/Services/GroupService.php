@@ -5,11 +5,8 @@ namespace App\Modules\Docs\Services;
 use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
-use App\Models\Docs\Doc;
 use App\Models\Docs\Group;
-use App\Models\Docs\Project;
 use App\Services\Service;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GroupService extends Service
@@ -22,26 +19,29 @@ class GroupService extends Service
         if (empty($project_id)) {
             return $this->getPaginateFormat([]);
         }
-        $group_id = $request->input('group_id', 0);
+        $parent_id = $request->input('parent_id', 0);
+        $group_type = $request->input('group_type', Group::GROUP_TYPE_API);
         $search = $request->input('search', '');
-        $docBuild = Doc::with('userInfo');
+        $docBuild = Group::getInstance();
         $lists = $docBuild
             ->where('project_id', $project_id)
+            // 分组类型
+            ->where('group_type', $group_type)
             // 后期：管理员都可访问~
             // 还会存在对外可访问的文档
             ->where('user_id', $login_user_id)
-            ->where(function ($query) use ($search, $group_id){
+            ->where(function ($query) use ($search, $parent_id, $group_type){
                 if (!empty($search)){
-                    $query->where('doc_name', 'LIKE', trim($search) . '%');
+                    $query->where('group_name', 'LIKE', trim($search) . '%');
                 }
-                if ($group_id > 0){
-                    $query->where('group_id', '=', $group_id);
+                if ($parent_id > 0){
+                    $query->where('parent_id', '=', $parent_id);
                 }
             })
             ->orderByDESC('group_id')
-            ->paginate($this->getLimit());
+            ->get();
 
-        return $this->getPaginateFormat($lists);
+        return $lists;
     }
 
     protected function getDocById($doc_id, $with = [], $check_auth = true)
