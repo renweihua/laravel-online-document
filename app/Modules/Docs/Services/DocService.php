@@ -23,7 +23,7 @@ class DocService extends Service
         }
         $group_id = $request->input('group_id', 0);
         $search = $request->input('search', '');
-        $docBuild = Doc::getInstance();
+        $docBuild = Doc::with('userInfo');
         $lists = $docBuild
             ->where('project_id', $project_id)
             // 后期：管理员都可访问~
