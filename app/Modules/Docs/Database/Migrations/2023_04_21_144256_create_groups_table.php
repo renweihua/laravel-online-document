@@ -21,6 +21,7 @@ class CreateGroupsTable extends Migration
             $table->id('group_id');
             $table->bigInteger('parent_id')->unsigned()->default(0)->comment('父级Id');
             $table->bigInteger('project_id')->unsigned()->default(0)->comment('项目Id');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->boolean('group_type')->unsigned()->default(0)->comment('分组类型：0.API；1.文档');
             $table->string('group_name', 100)->default('')->comment('分组名称');
             $table->integer('sort')->unsigned()->default(100)->comment('排序：升序');
