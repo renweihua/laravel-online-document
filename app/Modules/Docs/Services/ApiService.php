@@ -5,13 +5,14 @@ namespace App\Modules\Docs\Services;
 use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
+use App\Models\Docs\Api;
 use App\Models\Docs\Doc;
 use App\Models\Docs\Project;
 use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DocService extends Service
+class ApiService extends Service
 {
     public function index()
     {
@@ -23,36 +24,36 @@ class DocService extends Service
         }
         $group_id = $request->input('group_id', 0);
         $search = $request->input('search', '');
-        $docBuild = Doc::with('userInfo');
-        $lists = $docBuild
+        $build = Api::with('userInfo');
+        $lists = $build
             ->where('project_id', $project_id)
             // 后期：管理员都可访问~
             // 还会存在对外可访问的文档
             ->where('user_id', $login_user_id)
             ->where(function ($query) use ($search, $group_id){
                 if (!empty($search)){
-                    $query->where('doc_name', 'LIKE', trim($search) . '%');
+                    $query->where('api_name', 'LIKE', trim($search) . '%');
                 }
                 if ($group_id > 0){
                     $query->where('group_id', '=', $group_id);
                 }
             })
-            ->orderByDESC('doc_id')
+            ->orderByDESC('api_id')
             ->paginate($this->getLimit());
 
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getDocById($doc_id, $with = [], $check_auth = true)
+    protected function getDocById($api_id, $with = [], $check_auth = true)
     {
-        $doc = Doc::with(array_merge(['project', 'userInfo'], $with))->find($doc_id);
-        if (empty($doc)){
-            throw new BadRequestException('文档不存在或已删除！');
+        $detail = Api::with(array_merge(['project', 'userInfo'], $with))->find($api_id);
+        if (empty($detail)){
+            throw new BadRequestException('API不存在或已删除！');
         }
-        if ($check_auth && $doc->user_id != getLoginUserId()){
-            throw new ForbiddenException('您无权限查看文档`' . $doc->project_name . '`！');
+        if ($check_auth && $detail->user_id != getLoginUserId()){
+            throw new ForbiddenException('您无权限查看API`' . $detail->api_name . '`！');
         }
-        return $doc;
+        return $detail;
     }
 
     public function detail($doc_id)

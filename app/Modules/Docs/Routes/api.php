@@ -33,6 +33,11 @@ Route::prefix('')->middleware([
         Route::get('projects', 'ProjectController@index');
         Route::get('project-detail', 'ProjectController@detail');
 
+        // API列表
+        Route::get('apis', 'ApiController@index');
+        Route::get('api-detail', 'ApiController@detail');
+        Route::post('api-create', 'ApiController@createOrUpdate');
+        Route::put('api-update', 'ApiController@createOrUpdate');
 
         // 文档列表
         Route::get('docs', 'DocController@index');
