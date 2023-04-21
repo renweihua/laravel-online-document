@@ -43,9 +43,9 @@ class DocService extends Service
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getDocById($id, $with = [], $check_auth = true)
+    protected function getDocById($doc_id, $with = [], $check_auth = true)
     {
-        $doc = Doc::with(array_merge(['project'], $with))->find($id);
+        $doc = Doc::with(array_merge(['project', 'userInfo'], $with))->find($doc_id);
         if (empty($doc)){
             throw new BadRequestException('文档不存在或已删除！');
         }
@@ -55,20 +55,20 @@ class DocService extends Service
         return $doc;
     }
 
-    public function detail($id)
+    public function detail($doc_id)
     {
-        return $this->getDocById($id);
+        return $this->getDocById($doc_id);
     }
 
     public function createOrUpdate($request)
     {
-        $id = $request->input('id', 0);
-        if (!$id){
+        $doc_id = $request->input('doc_id', 0);
+        if (!$doc_id){
             $doc = new Doc();
             $doc->user_id = getLoginUserId();
             $doc->project_id = $request->input('project_id');
         }else{
-            $doc = $this->getDocById($id);
+            $doc = $this->getDocById($doc_id);
         }
 
         DB::beginTransaction();

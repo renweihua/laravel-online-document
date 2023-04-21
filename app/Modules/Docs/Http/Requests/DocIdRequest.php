@@ -21,7 +21,7 @@ class DocIdRequest extends BaseRequest
     public function rules()
     {
         return [
-            'id' => [
+            'doc_id' => [
                 'required',
                 Rule::exists($this->instance->getTable(), $this->instance->getKeyName()),
             ],
@@ -31,8 +31,8 @@ class DocIdRequest extends BaseRequest
     public function messages()
     {
         return [
-            'id.required' => '请输入文档Id！',
-            'id.exists'   => '请指定有效的文档！',
+            'doc_id.required' => '请输入文档Id！',
+            'doc_id.exists'   => '请指定有效的文档！',
         ];
     }
 }

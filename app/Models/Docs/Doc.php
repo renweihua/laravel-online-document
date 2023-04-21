@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 
 class Doc extends Model
 {
+    protected $primaryKey = 'doc_id';
     protected $appends = ['time_formatting'];
 
     public function userInfo()
