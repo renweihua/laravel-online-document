@@ -9,7 +9,7 @@ class AuthException extends Exception
 {
     protected $user_id = 0;
 
-    public function __construct(string $message = null, int $http_code = HttpStatus::FORBIDDEN, $user_id = 0)
+    public function __construct(string $message = null, int $http_code = HttpStatus::UNAUTHORIZED, $user_id = 0)
     {
         parent::__construct($message, $http_code);
         $this->user_id = $user_id;
