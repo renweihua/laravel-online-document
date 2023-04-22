@@ -11,6 +11,10 @@ class Project extends Model
 
     protected $appends = ['project_type_text', 'time_formatting'];
 
+    // 项目类型
+    // PC端
+    const PROJECT_TYPE_PC = 0;
+
     public function getProjectTypeTextAttribute($key)
     {
         $text = 'PC端';

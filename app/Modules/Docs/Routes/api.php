@@ -32,6 +32,8 @@ Route::prefix('')->middleware([
         // 项目管理
         Route::get('projects', 'ProjectController@index');
         Route::get('project-detail', 'ProjectController@detail');
+        Route::post('project-create', 'ProjectController@createOrUpdate');
+        Route::put('project-update', 'ProjectController@createOrUpdate');
 
         // 分组管理
         Route::get('groups', 'GroupController@index');

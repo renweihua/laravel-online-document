@@ -2,10 +2,12 @@
 
 namespace App\Modules\Docs\Services;
 
+use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Project;
 use App\Services\Service;
+use Illuminate\Support\Facades\DB;
 
 class ProjectService extends Service
 {
@@ -47,5 +49,36 @@ class ProjectService extends Service
     public function detail($project_id)
     {
         return $this->getProjectById($project_id);
+    }
+
+    public function createOrUpdate($request)
+    {
+        $project_id = $request->input('project_id', 0);
+        if (!$project_id){
+            $detail = new Project();
+            $detail->user_id = getLoginUserId();
+        }else{
+            $detail = $this->getProjectById($project_id);
+        }
+
+        DB::beginTransaction();
+        try {
+            $detail->project_name = $request->input('project_name');
+            $detail->project_type = $request->input('project_type', Project::PROJECT_TYPE_PC);
+            if ($request->has('project_description')){
+                $detail->project_description = $request->input('project_description', '');
+            }
+            if ($request->has('project_version')){
+                $detail->project_version = $request->input('project_version', '');
+            }
+            $detail->save();
+
+            DB::commit();
+
+            return $detail;
+        }catch (Exception $e){
+            DB::rollBack();
+            throw new BadRequestException('项目更新失败，请重试！');
+        }
     }
 }
