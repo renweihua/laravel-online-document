@@ -29,6 +29,9 @@ Route::prefix('')->middleware([
     });
 
     Route::prefix('')->group(function () {
+        // 通用协议定义
+        Route::get('properties', 'PropertyController@index');
+
         // 项目管理
         Route::get('projects', 'ProjectController@index');
         Route::get('project-detail', 'ProjectController@detail');
