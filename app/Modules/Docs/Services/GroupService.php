@@ -30,7 +30,7 @@ class GroupService extends Service
             // 后期：管理员都可访问~
             // 还会存在对外可访问的文档
             ->where('user_id', $login_user_id)
-            ->where(function ($query) use ($search, $parent_id, $group_type){
+            ->where(function ($query) use ($search, $parent_id){
                 if (!empty($search)){
                     $query->where('group_name', 'LIKE', trim($search) . '%');
                 }

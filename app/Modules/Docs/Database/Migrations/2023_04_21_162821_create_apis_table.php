@@ -25,7 +25,7 @@ class CreateApisTable extends Migration
             $table->string('api_url', 200)->default('')->comment('URL');
             $table->string('api_name', 100)->default('')->comment('API名称');
             $table->string('api_description', 200)->default('')->comment('API描述');
-            $table->string('protocol_type', 200)->default('')->comment('协议');
+            $table->string('http_protocol', 200)->default('')->comment('协议');
             $table->string('object_name', 200)->default('')->comment('对象名');
             $table->string('function_name', 200)->default('')->comment('方法名');
             $table->string('develop_language', 200)->default('')->comment('开发语言');

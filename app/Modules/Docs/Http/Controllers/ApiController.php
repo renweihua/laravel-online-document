@@ -3,6 +3,7 @@
 namespace App\Modules\Docs\Http\Controllers;
 
 use App\Modules\Docs\Http\Requests\ApiIdRequest;
+use App\Modules\Docs\Http\Requests\ApiRequest;
 use App\Modules\Docs\Http\Requests\DocIdRequest;
 use App\Modules\Docs\Http\Requests\DocRequest;
 use App\Modules\Docs\Http\Requests\ProjectIdRequest;
@@ -29,10 +30,10 @@ class ApiController extends DocsController
         return $this->successJson($lists);
     }
 
-    public function createOrUpdate(DocRequest $request): JsonResponse
+    public function createOrUpdate(ApiRequest $request): JsonResponse
     {
-        $doc = $this->service->createOrUpdate($request);
+        $detail = $this->service->createOrUpdate($request);
 
-        return $this->successJson($doc, '文档`' . $doc->doc_name . '`保存成功！');
+        return $this->successJson($detail, '文档`' . $detail->api_name . '`保存成功！');
     }
 }
