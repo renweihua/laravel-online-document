@@ -30,6 +30,20 @@ class PropertyController extends DocsController
                 'UDP',
                 'TCP',
             ],
+            // 字段类型
+            'filed_type' => [
+                'String',
+                'Int',
+                'Text',
+                'Array',
+                'Object',
+                'Double',
+                'Float',
+                'Boolean',
+                'Resource',
+                'File',
+                'Null',
+            ],
         ];
         return $this->successJson($lists);
     }
