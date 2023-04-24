@@ -65,7 +65,7 @@ class ApiService extends Service
     {
         $api_id = $request->input('api_id', 0);
         if (!$api_id){
-            $detail = new Doc();
+            $detail = new Api();
             $detail->user_id = getLoginUserId();
             $detail->project_id = $request->input('project_id');
         }else{
@@ -77,7 +77,7 @@ class ApiService extends Service
             $detail->group_id = $request->input('group_id', 0);
             $detail->api_url = $request->input('api_url');
             $detail->api_name = $request->input('api_name');
-            $detail->api_description = $request->input('api_description');
+            $detail->api_description = $request->input('api_description', '');
             // 请求协议
             if ($request->has('http_protocol')){
                 $detail->http_protocol = $request->input('http_protocol', '');

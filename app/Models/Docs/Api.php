@@ -9,11 +9,12 @@ class Api extends Model
 {
     protected $primaryKey = 'api_id';
     protected $appends = ['time_formatting'];
+
     protected $casts = [
         'http_header' => 'array',
         'http_params' => 'array',
-        'response_sample' => 'array',
         'response_params' => 'array',
+        'response_sample' => 'array',
     ];
 
     public function userInfo()
