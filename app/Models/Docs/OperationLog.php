@@ -2,6 +2,7 @@
 
 namespace App\Models\Docs;
 
+use App\Exceptions\HttpStatus\ServerErrorException;
 use App\Models\Model;
 use App\Models\UserInfo;
 
@@ -24,18 +25,21 @@ class OperationLog extends Model
         'restore' => ['restore', '恢复'],
     ];
 
+    /**
+     * 日志类型
+     */
+    // 项目
     const LOG_TYPE_PROJECT = 0;
+    // 分组
     const LOG_TYPE_GROUP = 1;
+    // API
     const LOG_TYPE_API = 2;
+    // 文档
     const LOG_TYPE_DOC = 3;
-
-    const LOG_TYPE = [
-        'PROJECT' => [0, '项目'],
-        'group' => [1, '分组'],
-        'API' => [2, 'API'],
-        'DOC' => [3, '文档'],
-        'user' => [4, '用户'],
-    ];
+    // 字段映射
+    const LOG_TYPE_FIELD_MAPPING = 4;
+    // 项目成员
+    const LOG_TYPE_MEMBER = 5;
 
     public function userInfo()
     {
@@ -78,6 +82,15 @@ class OperationLog extends Model
                 $log->relation_id = $detail->doc_id;
                 $log->user_id = $detail->user_id;
                 $content .= '文档:`' . $detail->doc_name . '`';
+                break;
+            case self::LOG_TYPE_FIELD_MAPPING: // 字段映射
+                $log->project_id = $detail->project_id;
+                $log->relation_id = $detail->id;
+                $log->user_id = $detail->user_id;
+                $content .= '字段映射:`' . $detail->field_name . '`';
+                break;
+            default:
+                throw new ServerErrorException('未处理的日志类型：' . $log->log_type);
                 break;
         }
         $log->content = $content;

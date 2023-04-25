@@ -6,6 +6,7 @@ use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\FieldMapping;
+use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Services\Service;
 use Illuminate\Http\Request;
@@ -59,12 +60,14 @@ class FieldMappingService extends Service
 
     public function createOrUpdate(Request $request)
     {
+        $create = true;
         $id = $request->input('id', 0);
         if (!$id){
             $detail = new FieldMapping();
             $detail->user_id = getLoginUserId();
             $detail->project_id = $request->input('project_id');
         }else{
+            $create = false;
             $detail = $this->getDetailById($id);
         }
 
@@ -78,12 +81,15 @@ class FieldMappingService extends Service
             $detail->save();
 
             DB::commit();
-
-            return $detail;
         }catch (Exception $e){
             DB::rollBack();
             throw new BadRequestException('字段映射更新失败，请重试！');
         }
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_FIELD_MAPPING, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
+
+        return $detail;
     }
 
     public function delete($id)

@@ -31,7 +31,7 @@ class OperationLogService extends Service
                 }
             })
             ->orderByDESC('id')
-            ->paginate($this->getLimit());
+            ->paginate(100);
 
         return $this->getPaginateFormat($lists);
     }
