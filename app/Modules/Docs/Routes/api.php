@@ -31,6 +31,8 @@ Route::prefix('')->middleware([
     Route::prefix('')->group(function () {
         // 通用协议定义
         Route::get('properties', 'PropertyController@index');
+        // 搜索会员
+        Route::get('search-users', 'PropertyController@users');
         // 操作日志列表
         Route::get('operation-logs', 'OperationLogController@index');
 

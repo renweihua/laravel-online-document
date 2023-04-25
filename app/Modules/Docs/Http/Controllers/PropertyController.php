@@ -2,9 +2,11 @@
 
 namespace App\Modules\Docs\Http\Controllers;
 
+use App\Models\User;
 use App\Modules\Docs\Http\Requests\GroupRequest;
 use App\Modules\Docs\Services\GroupService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 // 通用属性配置
 class PropertyController extends DocsController
@@ -70,5 +72,20 @@ class PropertyController extends DocsController
             ],
         ];
         return $this->successJson($lists);
+    }
+
+    public function users(Request $request): JsonResponse
+    {
+        $search = $request->input('search');
+        if (empty($search)){
+            return $this->errorJson('请输入你要检索的会员相关 账户/手机号/邮箱！');
+        }
+        $users = User::where('user_name', $search)
+            ->orWhere('user_mobile', $search)
+            ->orWhere('user_email', $search)
+            ->with('userInfo')
+            ->get();
+
+        return $this->successJson($users);
     }
 }
