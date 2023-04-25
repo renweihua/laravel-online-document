@@ -41,7 +41,7 @@ class PropertyController extends DocsController
                 'TCP',
             ],
             // 字段类型
-            'filed_type' => [
+            'field_type' => [
                 [
                     'label' => '常用',
                     'options' => [

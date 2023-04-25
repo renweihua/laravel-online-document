@@ -40,7 +40,7 @@ class FieldMappingService extends Service
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getProjectById($project_id, $with = [], $check_auth = true)
+    protected function getDetailById($project_id, $with = [], $check_auth = true)
     {
         $detail = FieldMapping::with(array_merge(['userInfo'], $with))->find($project_id);
         if (empty($detail)){
@@ -54,7 +54,7 @@ class FieldMappingService extends Service
 
     public function detail($id)
     {
-        return $this->getProjectById($id);
+        return $this->getDetailById($id);
     }
 
     public function createOrUpdate(Request $request)
@@ -65,7 +65,7 @@ class FieldMappingService extends Service
             $detail->user_id = getLoginUserId();
             $detail->project_id = $request->input('project_id');
         }else{
-            $detail = $this->getProjectById($id);
+            $detail = $this->getDetailById($id);
         }
 
         DB::beginTransaction();
@@ -84,5 +84,14 @@ class FieldMappingService extends Service
             DB::rollBack();
             throw new BadRequestException('字段映射更新失败，请重试！');
         }
+    }
+
+    public function delete($id)
+    {
+        $detail = $this->getDetailById($id);
+
+        $detail->delete();
+
+        return $detail;
     }
 }

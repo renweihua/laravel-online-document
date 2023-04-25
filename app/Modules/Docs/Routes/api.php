@@ -61,5 +61,6 @@ Route::prefix('')->middleware([
         Route::get('field-mapping/detail', 'FieldMappingController@detail');
         Route::post('field-mapping/create', 'FieldMappingController@createOrUpdate');
         Route::put('field-mapping/update', 'FieldMappingController@createOrUpdate');
+        Route::delete('field-mapping/delete', 'FieldMappingController@delete');
     });
 });

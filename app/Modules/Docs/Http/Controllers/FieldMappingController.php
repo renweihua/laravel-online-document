@@ -33,4 +33,11 @@ class FieldMappingController extends DocsController
 
         return $this->successJson($detail, '字段映射`' . $detail->field_name . '`保存成功！');
     }
+
+    public function delete(FieldMappingIdRequest $request): JsonResponse
+    {
+        $detail = $this->service->delete($request->input('id'));
+
+        return $this->successJson([], '字段映射`' . $detail->field_name . '`删除成功！');
+    }
 }
