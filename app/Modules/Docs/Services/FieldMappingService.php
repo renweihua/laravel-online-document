@@ -34,7 +34,7 @@ class FieldMappingService extends Service
                     $query->where('field_type', '=', $field_type);
                 }
             })
-            ->orderByDESC('project_id')
+            ->orderByDESC('id')
             ->paginate($this->getLimit());
 
         return $this->getPaginateFormat($lists);
