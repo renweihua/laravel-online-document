@@ -31,6 +31,8 @@ Route::prefix('')->middleware([
     Route::prefix('')->group(function () {
         // 通用协议定义
         Route::get('properties', 'PropertyController@index');
+        // 操作日志列表
+        Route::get('operation-logs', 'OperationLogController@index');
 
         // 项目管理
         Route::get('projects', 'ProjectController@index');
