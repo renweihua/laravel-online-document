@@ -11,7 +11,7 @@
  Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 24/04/2023 20:04:51
+ Date: 25/04/2023 10:46:44
 */
 
 SET NAMES utf8mb4;
@@ -169,13 +169,18 @@ CREATE TABLE `doc_projects` (
   KEY `cnpscy_projects_user_id_index` (`user_id`),
   KEY `cnpscy_projects_project_name_index` (`project_name`),
   KEY `cnpscy_projects_is_delete_index` (`is_delete`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='项目表';
 
 -- ----------------------------
 -- Records of doc_projects
 -- ----------------------------
 BEGIN;
 INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (1, 1, 0, '小丑路人·社区01', '社区的接口文档-2112', 'v1.0.001', 1681986475, 1682334316, 0, 1);
+INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (2, 1, 0, 'xiangm1', '', '2', 1682337895, 1682337895, 0, 0);
+INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (3, 1, 0, '3333', '', '111', 1682337907, 1682337907, 0, 0);
+INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (4, 1, 0, '004', '', '004', 1682337916, 1682337916, 0, 0);
+INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (5, 1, 0, '005', '', '005', 1682337921, 1682337921, 0, 0);
+INSERT INTO `doc_projects` (`project_id`, `user_id`, `project_type`, `project_name`, `project_description`, `project_version`, `created_time`, `updated_time`, `is_delete`, `is_public`) VALUES (6, 1, 0, '006', '', '006', 1682337925, 1682337925, 0, 0);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

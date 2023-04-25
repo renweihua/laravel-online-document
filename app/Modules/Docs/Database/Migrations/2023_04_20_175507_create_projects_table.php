@@ -27,9 +27,11 @@ class CreateProjectsTable extends Migration
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
             $table->boolean('is_delete')->unsigned()->default(0)->comment('是否删除');
+            $table->boolean('is_public')->unsigned()->default(0)->comment('公开度：0.私密；1.完全公开；2.密码访问');
             $table->index('user_id');
             $table->index('project_name');
             $table->index('is_delete');
+            $table->index('is_public');
         });
         $table = get_db_prefix() . $table;
         // 设置表注释

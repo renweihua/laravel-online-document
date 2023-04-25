@@ -71,6 +71,7 @@ class ProjectService extends Service
             if ($request->has('project_version')){
                 $detail->project_version = $request->input('project_version', '');
             }
+            $detail->is_public = $request->input('is_public', 0);
             $detail->save();
 
             DB::commit();
