@@ -32,17 +32,31 @@ class PropertyController extends DocsController
             ],
             // 字段类型
             'filed_type' => [
-                'String',
-                'Int',
-                'Text',
-                'Array',
-                'Object',
-                'Double',
-                'Float',
-                'Boolean',
-                'Resource',
-                'File',
-                'Null',
+                [
+                    'label' => '常用',
+                    'options' => [
+                        'string',
+                        'integer',
+                        'number',
+                        'text',
+                        'array',
+                        'object',
+                        'boolean',
+                        'file',
+                        'date',
+                        'float',
+                    ]
+                ],
+                [
+                    'label' => '常规',
+                    'options' => [
+                        'double',
+                        'resource',
+                        'dateTime',
+                        'timeStamp',
+                        'null',
+                    ]
+                ]
             ],
         ];
         return $this->successJson($lists);

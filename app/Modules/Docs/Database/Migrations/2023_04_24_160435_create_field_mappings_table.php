@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateFieldMappingsTable extends Migration
 {
@@ -33,7 +34,7 @@ class CreateFieldMappingsTable extends Migration
         });
         $table = get_db_prefix() . $table;
         // 设置表注释
-        Db::statement("ALTER TABLE `{$table}` comment '字段映射表'");
+        DB::statement("ALTER TABLE `{$table}` comment '字段映射表'");
     }
 
     /**

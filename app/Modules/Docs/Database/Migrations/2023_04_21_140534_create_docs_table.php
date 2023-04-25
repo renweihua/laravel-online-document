@@ -38,7 +38,7 @@ class CreateDocsTable extends Migration
         });
         $table = get_db_prefix() . $table;
         // 设置表注释
-        Db::statement("ALTER TABLE `{$table}` comment '文档表'");
+        DB::statement("ALTER TABLE `{$table}` comment '文档表'");
     }
 
     /**
