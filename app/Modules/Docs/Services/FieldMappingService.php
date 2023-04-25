@@ -42,19 +42,19 @@ class FieldMappingService extends Service
 
     protected function getProjectById($project_id, $with = [], $check_auth = true)
     {
-        $project = Project::with(array_merge(['userInfo'], $with))->find($project_id);
-        if (empty($project)){
-            throw new BadRequestException('项目不存在或已删除！');
+        $detail = FieldMapping::with(array_merge(['userInfo'], $with))->find($project_id);
+        if (empty($detail)){
+            throw new BadRequestException('字段映射不存在或已删除！');
         }
-        if ($check_auth && $project->user_id != getLoginUserId()){
-            throw new ForbiddenException('您无权限查看项目`' . $project->project_name . '`！');
+        if ($check_auth && $detail->user_id != getLoginUserId()){
+            throw new ForbiddenException('您无权限查看字段映射`' . $detail->field_name . '`！');
         }
-        return $project;
+        return $detail;
     }
 
-    public function detail($project_id)
+    public function detail($id)
     {
-        return $this->getProjectById($project_id);
+        return $this->getProjectById($id);
     }
 
     public function createOrUpdate(Request $request)
