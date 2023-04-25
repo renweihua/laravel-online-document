@@ -55,5 +55,11 @@ Route::prefix('')->middleware([
         Route::get('doc-detail', 'DocController@detail');
         Route::post('doc-create', 'DocController@createOrUpdate');
         Route::put('doc-update', 'DocController@createOrUpdate');
+
+        // 字段映射管理
+        Route::get('field-mappings', 'FieldMappingController@index');
+        Route::get('field-mapping/detail', 'FieldMappingController@detail');
+        Route::post('field-mapping/create', 'FieldMappingController@createOrUpdate');
+        Route::put('field-mapping/update', 'FieldMappingController@createOrUpdate');
     });
 });
