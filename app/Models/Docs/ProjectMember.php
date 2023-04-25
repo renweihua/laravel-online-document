@@ -5,7 +5,7 @@ namespace App\Models\Docs;
 use App\Models\Model;
 use App\Models\UserInfo;
 
-class ProjectUser extends Model
+class ProjectMember extends Model
 {
     protected $appends = ['time_formatting'];
 

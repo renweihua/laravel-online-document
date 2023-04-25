@@ -66,5 +66,12 @@ Route::prefix('')->middleware([
         Route::post('field-mapping/create', 'FieldMappingController@createOrUpdate');
         Route::put('field-mapping/update', 'FieldMappingController@createOrUpdate');
         Route::delete('field-mapping/delete', 'FieldMappingController@delete');
+
+        // 项目成员管理
+        Route::get('project-members', 'ProjectMemberController@index');
+        Route::get('project-member/detail', 'ProjectMemberController@detail');
+        Route::post('project-member/create', 'ProjectMemberController@createOrUpdate');
+        Route::put('project-member/update', 'ProjectMemberController@createOrUpdate');
+        Route::delete('project-member/delete', 'ProjectMemberController@delete');
     });
 });

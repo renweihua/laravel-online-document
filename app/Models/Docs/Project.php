@@ -25,4 +25,9 @@ class Project extends Model
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
     }
+
+    public static function getDetailById($id)
+    {
+        return self::find($id);
+    }
 }

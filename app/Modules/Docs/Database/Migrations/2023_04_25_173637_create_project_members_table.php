@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreateProjectUsersTable extends Migration
+class CreateProjectMembersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateProjectUsersTable extends Migration
      */
     public function up()
     {
-        $table = 'project_users';
+        $table = 'project_members';
         if (Schema::hasTable($table)) return;
         Schema::create($table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -43,6 +43,6 @@ class CreateProjectUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_users');
+        Schema::dropIfExists('project_members');
     }
 }

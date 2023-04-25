@@ -100,14 +100,14 @@ class ApiService extends Service
             $detail->save();
 
             DB::commit();
-
-            // 记录操作日志
-            OperationLog::createLog(OperationLog::LOG_TYPE_API, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
-
-            return $detail;
         }catch (Exception $e){
             DB::rollBack();
             throw new BadRequestException('API' . ($create ? '创建' : '更新') . '失败，请重试！');
         }
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_API, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
+
+        return $detail;
     }
 }

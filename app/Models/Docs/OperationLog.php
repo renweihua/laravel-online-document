@@ -39,7 +39,7 @@ class OperationLog extends Model
     // 字段映射
     const LOG_TYPE_FIELD_MAPPING = 4;
     // 项目成员
-    const LOG_TYPE_MEMBER = 5;
+    const LOG_TYPE_PROJECT_MEMBER = 5;
 
     public function userInfo()
     {
@@ -88,6 +88,12 @@ class OperationLog extends Model
                 $log->relation_id = $detail->id;
                 $log->user_id = $detail->user_id;
                 $content .= '字段映射:`' . $detail->field_name . '`';
+                break;
+            case self::LOG_TYPE_PROJECT_MEMBER: // 项目成员
+                $log->project_id = $detail->project_id;
+                $log->relation_id = $detail->id;
+                $log->user_id = $detail->user_id;
+                $content .= '成员:`' . $detail->userInfo->nick_name . '`';
                 break;
             default:
                 throw new ServerErrorException('未处理的日志类型：' . $log->log_type);

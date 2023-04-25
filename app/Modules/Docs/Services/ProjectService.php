@@ -78,14 +78,14 @@ class ProjectService extends Service
             $detail->save();
 
             DB::commit();
-
-            // 记录操作日志
-            OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
-
-            return $detail;
         }catch (Exception $e){
             DB::rollBack();
             throw new BadRequestException('项目' . ($create ? '创建' : '更新') . '失败，请重试！');
         }
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
+
+        return $detail;
     }
 }
