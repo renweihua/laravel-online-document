@@ -6,6 +6,7 @@ use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Group;
+use App\Models\Docs\OperationLog;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,7 @@ class GroupService extends Service
 
     public function createOrUpdate($request)
     {
+        $create = true;
         $group_id = $request->input('group_id', 0);
         if (!$group_id){
             $detail = new Group();
@@ -70,6 +72,7 @@ class GroupService extends Service
             $detail->project_id = $request->input('project_id');
             $detail->group_type = $request->input('group_type');
         }else{
+            $create = false;
             $detail = $this->getDocById($group_id);
         }
 
@@ -85,6 +88,9 @@ class GroupService extends Service
             $detail->save();
 
             DB::commit();
+
+            // 记录操作日志
+            OperationLog::createLog(OperationLog::LOG_TYPE_GROUP, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
 
             return $detail;
         }catch (Exception $e){

@@ -7,6 +7,7 @@ use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Api;
 use App\Models\Docs\Doc;
+use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Services\Service;
 use Illuminate\Http\Request;
@@ -63,12 +64,14 @@ class ApiService extends Service
 
     public function createOrUpdate($request)
     {
+        $create = true;
         $api_id = $request->input('api_id', 0);
         if (!$api_id){
             $detail = new Api();
             $detail->user_id = getLoginUserId();
             $detail->project_id = $request->input('project_id');
         }else{
+            $create = false;
             $detail = $this->getDetailcById($api_id);
         }
 
@@ -97,6 +100,9 @@ class ApiService extends Service
             $detail->save();
 
             DB::commit();
+
+            // 记录操作日志
+            OperationLog::createLog(OperationLog::LOG_TYPE_API, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
 
             return $detail;
         }catch (Exception $e){

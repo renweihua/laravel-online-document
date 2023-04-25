@@ -15,17 +15,19 @@ class OperationLogService extends Service
         if (empty($project_id)) {
             return $this->getPaginateFormat([]);
         }
-        $log_type = $request->input('log_type', 0);
+        $log_type = $request->input('log_type', -1);
 
         $search = $request->input('search', '');
         $build = OperationLog::with('userInfo');
         $lists = $build
             ->where('project_id', '=', $project_id)
-            // 日志类型
-            ->where('log_type', '=', $log_type)
-            ->where(function ($query) use ($search){
+            ->where(function ($query) use ($search, $log_type){
                 if (!empty($search)){
                     $query->where('api_name', 'LIKE', trim($search) . '%');
+                }
+                // 日志类型
+                if ($log_type > -1){
+                    $query->where('log_type', '=', $log_type);
                 }
             })
             ->orderByDESC('id')

@@ -6,6 +6,7 @@ use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Doc;
+use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Services\Service;
 use Illuminate\Http\Request;
@@ -62,33 +63,38 @@ class DocService extends Service
 
     public function createOrUpdate($request)
     {
+        $create = true;
         $doc_id = $request->input('doc_id', 0);
         if (!$doc_id){
-            $doc = new Doc();
-            $doc->user_id = getLoginUserId();
-            $doc->project_id = $request->input('project_id');
+            $detail = new Doc();
+            $detail->user_id = getLoginUserId();
+            $detail->project_id = $request->input('project_id');
         }else{
-            $doc = $this->getDocById($doc_id);
+            $create = false;
+            $detail = $this->getDocById($doc_id);
         }
 
         DB::beginTransaction();
         try {
-            $doc->doc_name = $request->input('doc_name');
-            $doc->group_id = $request->input('group_id', 0);
+            $detail->doc_name = $request->input('doc_name');
+            $detail->group_id = $request->input('group_id', 0);
             if ($request->has('content_html')){
-                $doc->content_html = $request->input('content_html', '');
+                $detail->content_html = $request->input('content_html', '');
             }
             if ($request->has('content_markdown')){
-                $doc->content_markdown = $request->input('content_markdown', '');
+                $detail->content_markdown = $request->input('content_markdown', '');
             }
             if ($request->has('sort')){
-                $doc->sort = $request->input('sort');
+                $detail->sort = $request->input('sort');
             }
-            $doc->save();
+            $detail->save();
 
             DB::commit();
 
-            return $doc;
+            // 记录操作日志
+            OperationLog::createLog(OperationLog::LOG_TYPE_DOC, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
+
+            return $detail;
         }catch (Exception $e){
             DB::rollBack();
             throw new BadRequestException('文档更新失败，请重试！');

@@ -21,7 +21,7 @@ class CreateOperationLogsTable extends Migration
             $table->id();
             $table->bigInteger('project_id')->unsigned()->default(0)->comment('项目Id');
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
-            $table->boolean('log_type')->unsigned()->default(0)->comment('日志类型：0.项目；1.API；2.文档；3.分组；4.成员');
+            $table->boolean('log_type')->unsigned()->default(0)->comment('日志类型：0.项目；1.分组；2.API；3.文档；4.成员');
             $table->string('action', 200)->default('')->comment('动作');
             $table->string('content', 500)->default('')->comment('操作内容');
             $table->bigInteger('relation_id')->unsigned()->default(0)->comment('关联Id');

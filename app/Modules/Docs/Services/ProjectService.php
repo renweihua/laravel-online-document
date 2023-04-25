@@ -5,6 +5,7 @@ namespace App\Modules\Docs\Services;
 use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
+use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
@@ -53,11 +54,13 @@ class ProjectService extends Service
 
     public function createOrUpdate($request)
     {
+        $create = true;
         $project_id = $request->input('project_id', 0);
         if (!$project_id){
             $detail = new Project();
             $detail->user_id = getLoginUserId();
         }else{
+            $create = false;
             $detail = $this->getProjectById($project_id);
         }
 
@@ -75,6 +78,9 @@ class ProjectService extends Service
             $detail->save();
 
             DB::commit();
+
+            // 记录操作日志
+            OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
 
             return $detail;
         }catch (Exception $e){
