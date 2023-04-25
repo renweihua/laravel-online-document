@@ -83,7 +83,7 @@ class FieldMappingService extends Service
             DB::commit();
         }catch (Exception $e){
             DB::rollBack();
-            throw new BadRequestException('字段映射更新失败，请重试！');
+            throw new BadRequestException('字段映射' . ($create ? '创建' : '更新') . '失败，请重试！');
         }
 
         // 记录操作日志

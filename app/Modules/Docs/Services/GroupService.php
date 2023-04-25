@@ -95,7 +95,7 @@ class GroupService extends Service
             return $detail;
         }catch (Exception $e){
             DB::rollBack();
-            throw new BadRequestException('分组更新失败，请重试！');
+            throw new BadRequestException('分组' . ($create ? '创建' : '更新') . '失败，请重试！');
         }
     }
 }

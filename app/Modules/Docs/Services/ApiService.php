@@ -107,7 +107,7 @@ class ApiService extends Service
             return $detail;
         }catch (Exception $e){
             DB::rollBack();
-            throw new BadRequestException('API更新失败，请重试！');
+            throw new BadRequestException('API' . ($create ? '创建' : '更新') . '失败，请重试！');
         }
     }
 }
