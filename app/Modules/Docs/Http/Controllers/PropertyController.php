@@ -14,14 +14,24 @@ class PropertyController extends DocsController
         $lists = [
             // 请求方式
             'http_method' => [
-                'GET',
-                'POST',
-                'PUT',
-                'PATCH',
-                'DELETE',
-                'OPTIONS',
-                'HEAD',
-                'CONNECT',
+                [
+                    'label' => '常用',
+                    'options' => [
+                        'GET',
+                        'POST',
+                        'PUT',
+                        'PATCH',
+                        'DELETE',
+                    ],
+                ],
+                [
+                    'label' => '其他',
+                    'options' => [
+                        'OPTIONS',
+                        'HEAD',
+                        'CONNECT',
+                    ],
+                ],
             ],
             // 请求协议
             'http_protocol' => [
