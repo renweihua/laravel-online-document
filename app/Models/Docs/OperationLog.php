@@ -54,6 +54,8 @@ class OperationLog extends Model
     public static function createLog($log_type, $action, $detail)
     {
         $log = new self;
+        // 操作会员Id
+        $log->user_id = getLoginUserId();
         $log->log_type = $log_type;
         $log->action = $action;
         $show_action = self::ACTION_SHOW[$action] ?? '';
@@ -62,37 +64,31 @@ class OperationLog extends Model
             case self::LOG_TYPE_PROJECT: // 项目
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->project_id;
-                $log->user_id = $detail->user_id;
                 $content .= '项目:`' . $detail->project_name . '`';
                 break;
             case self::LOG_TYPE_GROUP: // 分组
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->group_id;
-                $log->user_id = $detail->user_id;
                 $content .= '分组:`' . $detail->group_name . '`';
                 break;
             case self::LOG_TYPE_API: // API接口
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->api_id;
-                $log->user_id = $detail->user_id;
                 $content .= 'API:`' . $detail->api_name . '`';
                 break;
             case self::LOG_TYPE_DOC: // 文档
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->doc_id;
-                $log->user_id = $detail->user_id;
                 $content .= '文档:`' . $detail->doc_name . '`';
                 break;
             case self::LOG_TYPE_FIELD_MAPPING: // 字段映射
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->id;
-                $log->user_id = $detail->user_id;
                 $content .= '字段映射:`' . $detail->field_name . '`';
                 break;
             case self::LOG_TYPE_PROJECT_MEMBER: // 项目成员
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->id;
-                $log->user_id = $detail->user_id;
                 $content .= '成员:`' . $detail->userInfo->nick_name . '`';
                 break;
             default:
