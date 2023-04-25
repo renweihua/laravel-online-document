@@ -18,11 +18,15 @@ class ProjectMemberService extends Service
     {
         $login_user_id = getLoginUserId();
         $request = request();
+        $project_id = $request->input('project_id');
+        if (empty($project_id)) {
+            return $this->getPaginateFormat([]);
+        }
         $type = $request->input('type', -1);
         $search = $request->input('search', '');
-        $projectBuild = Project::getInstance();
+        $projectBuild = ProjectMember::getInstance();
         $lists = $projectBuild
-            ->where('user_id', $login_user_id)
+            ->where('project_id', $project_id)
             ->where(function ($query) use ($search, $type){
                 if (!empty($search)){
                     $query->where('project_name', 'LIKE', trim($search) . '%');
@@ -31,7 +35,8 @@ class ProjectMemberService extends Service
                     $query->where('project_type', '=', $type);
                 }
             })
-            ->orderByDESC('project_id')
+            ->with(['user', 'userInfo'])
+            ->orderByDESC('id')
             ->paginate($this->getLimit());
 
         return $this->getPaginateFormat($lists);

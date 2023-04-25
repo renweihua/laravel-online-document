@@ -3,6 +3,7 @@
 namespace App\Models\Docs;
 
 use App\Models\Model;
+use App\Models\User;
 use App\Models\UserInfo;
 
 class ProjectMember extends Model
@@ -18,6 +19,11 @@ class ProjectMember extends Model
     const ROLE_POWER_WRITE = 1;
     // 创建人
     const ROLE_POWER_CREATOR = 2;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 
     public function userInfo()
     {
