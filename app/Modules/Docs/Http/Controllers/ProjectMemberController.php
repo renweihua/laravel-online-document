@@ -33,4 +33,11 @@ class ProjectMemberController extends DocsController
 
         return $this->successJson($detail, '项目成员`' . $detail->userInfo->nick_name . '`权限设置成功！');
     }
+
+    public function delete(ProjectMemberRequest $request): JsonResponse
+    {
+        $detail = $this->service->delete($request);
+
+        return $this->successJson([], '项目成员`' . $detail->userInfo->nick_name . '`删除成功！');
+    }
 }

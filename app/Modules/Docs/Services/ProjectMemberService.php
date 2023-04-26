@@ -5,6 +5,7 @@ namespace App\Modules\Docs\Services;
 use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
+use App\Models\Docs\FieldMapping;
 use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Models\Docs\ProjectMember;
@@ -62,10 +63,7 @@ class ProjectMemberService extends Service
         $login_user_id = getLoginUserId();
         $project_id = $request->input('project_id');
         // 验证登录会员的项目权限
-        $project = Project::getDetailById($project_id);
-        if ($project->user_id != $login_user_id){
-            throw new ForbiddenException('您无权设置项目成员！');
-        }
+        $project = $this->getProjectById($project_id);
 
         $create = true;
         $id = $request->input('id', 0);
@@ -103,10 +101,8 @@ class ProjectMemberService extends Service
         $login_user_id = getLoginUserId();
         $project_id = $request->input('project_id');
         // 验证登录会员的项目权限
-        $project = Project::getDetailById($project_id);
-        if ($project->user_id != $login_user_id){
-            throw new ForbiddenException('您无权设置项目成员！');
-        }
+        $project = $this->getProjectById($project_id);
+
         $user_id = $request->input('user_id');
 
         $lock_key = 'set:project:mermber:power:' . $user_id;
@@ -129,6 +125,35 @@ class ProjectMemberService extends Service
 
         // 记录操作日志
         OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER_POWER, OperationLog::ACTION['UPDATE'], $member);
+
+        return $member;
+    }
+
+    protected function getProjectById($project_id, $check_auth = true)
+    {
+        $project = Project::getDetailById($project_id);
+        if (empty($project)){
+            throw new BadRequestException('项目不存在或已删除！');
+        }
+        if ($check_auth && $project->user_id != getLoginUserId()){
+            throw new ForbiddenException('您无权设置项目成员');
+        }
+        return $project;
+    }
+
+    public function delete(Request $request)
+    {
+        $project_id = $request->input('project_id');
+        // 验证登录会员的项目权限
+        $project = $this->getProjectById($project_id);
+
+        $user_id = $request->input('user_id');
+
+        $member = ProjectMember::where('project_id', $project->project_id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        $member->delete();
 
         return $member;
     }

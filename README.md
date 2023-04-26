@@ -34,12 +34,12 @@
     - [X] 创建
     - [X] 编辑
     - [X] 删除
-- [ ] 项目成员
+- [X] 项目成员
     - [X] 列表 /api/project-members
     - [ ] ~~详情~~
     - [X] 创建
     - [X] 编辑
-    - [ ] 删除
+    - [X] 删除 /api/project-member/delete
     - [X] 设置权限 /api/project-member/set-role-power
 - 操作日志
     - [X] 列表 /api/operation-logs
