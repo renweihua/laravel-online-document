@@ -9,6 +9,7 @@ class Project extends Model
 {
     protected $primaryKey = 'project_id';
 
+    protected $is_delete = 0; // 是否开启删除（0.假删除；1.开启删除，就是直接删除；）
     protected $appends = ['project_type_text', 'time_formatting'];
 
     // 项目类型

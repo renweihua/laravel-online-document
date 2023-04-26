@@ -11,7 +11,7 @@ trait SoftDelete
      *
      * @var bool
      */
-    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；）
+    protected $is_delete = 1; // 是否开启删除（0.假删除；1.开启删除，就是直接删除；）
     protected $delete_field = 'is_delete';
 
     public function getIsDelete()

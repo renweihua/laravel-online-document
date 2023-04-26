@@ -8,6 +8,8 @@ use App\Models\UserInfo;
 class Group extends Model
 {
     protected $primaryKey = 'group_id';
+    protected $is_delete = 0; // 是否开启删除（0.假删除；1.开启删除，就是直接删除；）
+
     protected $appends = ['time_formatting'];
 
     // API分组
