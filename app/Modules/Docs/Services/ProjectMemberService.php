@@ -10,6 +10,7 @@ use App\Models\Docs\Project;
 use App\Models\Docs\ProjectMember;
 use App\Services\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ProjectMemberService extends Service
@@ -95,5 +96,40 @@ class ProjectMemberService extends Service
         OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
 
         return $detail;
+    }
+
+    public function setRolePower(Request $request)
+    {
+        $login_user_id = getLoginUserId();
+        $project_id = $request->input('project_id');
+        // 验证登录会员的项目权限
+        $project = Project::getDetailById($project_id);
+        if ($project->user_id != $login_user_id){
+            throw new ForbiddenException('您无权设置项目成员！');
+        }
+        $user_id = $request->input('user_id');
+
+        $lock_key = 'set:project:mermber:power:' . $user_id;
+        $lock = Cache::lock($lock_key, 60);
+        try{
+            $member = ProjectMember::where('project_id', $project->project_id)
+                ->where('user_id', $user_id)
+                ->lock()
+                ->first();
+            if (!$member){
+                throw new BadRequestException('项目成员不存在');
+            }
+            $member->role_power = $request->input('role_power', ProjectMember::ROLE_POWER_READ);
+            $member->save();
+        }catch (Exception $e){
+            throw new BadRequestException($e->getMessage());
+        } finally {
+            Cache::restoreLock($lock_key, $lock->owner());
+        }
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER_POWER, OperationLog::ACTION['UPDATE'], $member);
+
+        return $member;
     }
 }

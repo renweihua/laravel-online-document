@@ -40,6 +40,7 @@
     - [X] 创建
     - [X] 编辑
     - [ ] 删除
+    - [X] 设置权限 /api/project-member/set-role-power
 - 操作日志
     - [X] 列表 /api/operation-logs
     - [ ] 记录日志
