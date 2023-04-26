@@ -59,35 +59,47 @@ class ProjectMemberService extends Service
         $project_id = $request->input('project_id');
         // 验证登录会员的项目权限
         $project = $this->getProjectById($project_id);
-
-        $create = true;
+        $user_id = $request->input('user_id');
         $id = $request->input('id', 0);
-        if (!$id){
-            $user_id = $request->input('user_id');
-            // 验证会员是否已成员项目成员
-            if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $user_id)->first()){
-                throw new BadRequestException('该会员已成为项目成员！');
-            }
-            $detail = new ProjectMember();
-            $detail->user_id = $user_id;
-            $detail->project_id = $project->project_id;
+
+        if ($id){
+            $lock_key = 'create:project:mermber:' . $id;
         }else{
-            $create = false;
-            $detail = $this->getProjectUserById($project->id, $id);
+            $lock_key = 'create:project:mermber:' . $user_id;
         }
-
-        DB::beginTransaction();
-        try {
-            $detail->role_power = $request->input('role_power', ProjectMember::ROLE_POWER_READ);
-            if ($request->has('alias_name')){
-                $detail->alias_name = $request->input('alias_name', '');
+        $lock = Cache::lock($lock_key, 60);
+        try{
+            $create = true;
+            if (!$id){
+                // 验证会员是否已成员项目成员
+                if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $user_id)->first()){
+                    throw new BadRequestException('该会员已成为项目成员！');
+                }
+                $detail = new ProjectMember();
+                $detail->user_id = $user_id;
+                $detail->project_id = $project->project_id;
+            }else{
+                $create = false;
+                $detail = $this->getProjectUserById($project->id, $id);
             }
-            $detail->save();
 
-            DB::commit();
+            DB::beginTransaction();
+            try {
+                $detail->role_power = $request->input('role_power', ProjectMember::ROLE_POWER_READ);
+                if ($request->has('alias_name')){
+                    $detail->alias_name = $request->input('alias_name', '');
+                }
+                $detail->save();
+
+                DB::commit();
+            }catch (Exception $e){
+                DB::rollBack();
+                throw new BadRequestException('项目成员' . ($create ? '创建' : '更新') . '失败，请重试！' . $e->getMessage());
+            }
         }catch (Exception $e){
-            DB::rollBack();
-            throw new BadRequestException('项目成员' . ($create ? '创建' : '更新') . '失败，请重试！' . $e->getMessage());
+            throw new BadRequestException($e->getMessage());
+        } finally {
+            Cache::restoreLock($lock_key, $lock->owner());
         }
 
         // 记录操作日志
@@ -113,7 +125,7 @@ class ProjectMemberService extends Service
                 ->lock()
                 ->first();
             if (!$member){
-                throw new BadRequestException('项目成员不存在');
+                throw new BadRequestException('项目成员不存在或已删除');
             }
             $member->role_power = $request->input('role_power', ProjectMember::ROLE_POWER_READ);
             $member->save();
@@ -152,6 +164,9 @@ class ProjectMemberService extends Service
         $member = ProjectMember::where('project_id', $project->project_id)
             ->where('user_id', $user_id)
             ->first();
+        if (!$member){
+            throw new BadRequestException('项目成员不存在或已删除');
+        }
 
         $member->delete();
 

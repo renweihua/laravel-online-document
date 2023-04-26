@@ -34,6 +34,13 @@ class ApiController extends DocsController
     {
         $detail = $this->service->createOrUpdate($request);
 
-        return $this->successJson($detail, '文档`' . $detail->api_name . '`保存成功！');
+        return $this->successJson($detail, 'API`' . $detail->api_name . '`保存成功！');
+    }
+
+    public function delete(ApiIdRequest $request): JsonResponse
+    {
+        $detail = $this->service->delete($request);
+
+        return $this->successJson([], 'API`' . $detail->api_name . '`删除成功！');
     }
 }

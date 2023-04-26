@@ -110,4 +110,18 @@ class ApiService extends Service
 
         return $detail;
     }
+
+    public function delete(Request $request)
+    {
+        $id = $request->input('api_id');
+        // 验证登录会员的项目权限
+        $detail = $this->getDetailcById($id);
+
+        $detail->delete();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_API, OperationLog::ACTION['DELETE'], $detail);
+
+        return $detail;
+    }
 }

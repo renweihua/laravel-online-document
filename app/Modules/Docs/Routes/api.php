@@ -53,6 +53,7 @@ Route::prefix('')->middleware([
         Route::get('api-detail', 'ApiController@detail');
         Route::post('api-create', 'ApiController@createOrUpdate');
         Route::put('api-update', 'ApiController@createOrUpdate');
+        Route::delete('api-delete', 'ApiController@delete');
 
         // 文档管理
         Route::get('docs', 'DocController@index');
