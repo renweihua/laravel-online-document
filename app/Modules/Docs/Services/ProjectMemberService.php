@@ -124,7 +124,7 @@ class ProjectMemberService extends Service
         }
 
         // 记录操作日志
-        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER_POWER, OperationLog::ACTION['UPDATE'], $member);
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER, OperationLog::ACTION['ROLE_POWER'], $member);
 
         return $member;
     }
@@ -154,6 +154,9 @@ class ProjectMemberService extends Service
             ->first();
 
         $member->delete();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER, OperationLog::ACTION['DELETE'], $member);
 
         return $member;
     }

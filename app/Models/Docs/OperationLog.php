@@ -14,6 +14,7 @@ class OperationLog extends Model
         'CREATE' => 'CREATE',
         'UPDATE' => 'UPDATE',
         'DELETE' => 'DELETE',
+        'ROLE_POWER' => 'ROLE_POWER',
         'query' => ['query', '查询'],
         'restore' => ['restore', '恢复'],
     ];
@@ -21,6 +22,7 @@ class OperationLog extends Model
         'CREATE' => '创建',
         'UPDATE' => '编辑',
         'DELETE' => '删除',
+        'ROLE_POWER' => '设置权限',
         'query' => ['query', '查询'],
         'restore' => ['restore', '恢复'],
     ];
@@ -40,8 +42,6 @@ class OperationLog extends Model
     const LOG_TYPE_FIELD_MAPPING = 4;
     // 项目成员
     const LOG_TYPE_PROJECT_MEMBER = 5;
-    // 项目成员权限
-    const LOG_TYPE_PROJECT_MEMBER_POWER = 6;
 
     public function userInfo()
     {
@@ -91,12 +91,11 @@ class OperationLog extends Model
             case self::LOG_TYPE_PROJECT_MEMBER: // 项目成员
                 $log->project_id = $detail->project_id;
                 $log->relation_id = $detail->id;
-                $content .= '成员:`' . $detail->userInfo->nick_name . '`';
-                break;
-            case self::LOG_TYPE_PROJECT_MEMBER_POWER: // 项目成员权限
-                $log->project_id = $detail->project_id;
-                $log->relation_id = $detail->id;
-                $content .= '成员权限:`' . $detail->userInfo->nick_name . '`';
+                if ($action == self::ACTION['ROLE_POWER']){
+                    $content = '设置成员:`' . $detail->userInfo->nick_name . '`为`' . $detail->role_power_text . '`权限';
+                }else{
+                    $content .= '成员:`' . $detail->userInfo->nick_name . '`';
+                }
                 break;
             default:
                 throw new ServerErrorException('未处理的日志类型：' . $log->log_type);
