@@ -53,11 +53,6 @@ class ProjectMemberService extends Service
         return $projectUser;
     }
 
-    public function detail($project_id)
-    {
-        return $this->getProjectUserById($project_id);
-    }
-
     public function createOrUpdate(Request $request)
     {
         $login_user_id = getLoginUserId();
@@ -68,8 +63,13 @@ class ProjectMemberService extends Service
         $create = true;
         $id = $request->input('id', 0);
         if (!$id){
+            $user_id = $request->input('user_id');
+            // 验证会员是否已成员项目成员
+            if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $user_id)->first()){
+                throw new BadRequestException('该会员已成为项目成员！');
+            }
             $detail = new ProjectMember();
-            $detail->user_id = $request->input('user_id');
+            $detail->user_id = $user_id;
             $detail->project_id = $project->project_id;
         }else{
             $create = false;
