@@ -42,6 +42,9 @@ class GroupService extends Service
             ->orderByDESC('group_id')
             ->get();
 
+        // Tree结构
+        $lists = list_to_tree($lists->toArray(), 'group_id');
+
         return $lists;
     }
 
