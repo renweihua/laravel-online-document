@@ -38,6 +38,7 @@ class DocService extends Service
                     $query->where('group_id', '=', $group_id);
                 }
             })
+            ->orderByDESC('is_top')
             ->orderByDESC('doc_id')
             ->paginate($this->getLimit());
 
@@ -97,6 +98,16 @@ class DocService extends Service
 
         // 记录操作日志
         OperationLog::createLog(OperationLog::LOG_TYPE_DOC, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
+
+        return $detail;
+    }
+
+    public function setTop($doc_id, $is_top)
+    {
+        $detail = $this->getDocById($doc_id);
+
+        $detail->is_top = $is_top;
+        $detail->save();
 
         return $detail;
     }

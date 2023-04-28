@@ -25,6 +25,7 @@ class CreateDocsTable extends Migration
             $table->string('doc_name', 100)->default('')->comment('文档名称');
             $table->longtext('content_html')->nullable()->comment('内容');
             $table->longtext('content_markdown')->nullable()->comment('md内容');
+            $table->boolean('is_top')->unsigned()->default(0)->comment('是否置顶：0.否；1.是');
             $table->integer('sort')->unsigned()->default(100)->comment('排序：升序');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
@@ -33,6 +34,7 @@ class CreateDocsTable extends Migration
             $table->index('doc_name');
             $table->index('user_id');
             $table->index(['project_id', 'group_id']);
+            $table->index('is_top');
             $table->index('sort');
             $table->index('is_delete');
         });

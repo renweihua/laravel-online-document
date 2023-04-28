@@ -60,6 +60,7 @@ Route::prefix('')->middleware([
         Route::get('doc-detail', 'DocController@detail');
         Route::post('doc-create', 'DocController@createOrUpdate');
         Route::put('doc-update', 'DocController@createOrUpdate');
+        Route::patch('doc/set-top', 'DocController@setTop');
 
         // 字段映射管理
         Route::get('field-mappings', 'FieldMappingController@index');
