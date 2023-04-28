@@ -88,6 +88,9 @@ class GroupService extends Service
             if ($request->has('sort')){
                 $detail->sort = $request->input('sort');
             }
+            if ($request->has('default_expand')){
+                $detail->default_expand = $request->input('default_expand');
+            }
             $detail->save();
 
             DB::commit();

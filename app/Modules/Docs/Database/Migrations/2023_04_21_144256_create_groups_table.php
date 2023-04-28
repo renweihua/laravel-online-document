@@ -24,6 +24,7 @@ class CreateGroupsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
             $table->boolean('group_type')->unsigned()->default(0)->comment('分组类型：0.API；1.文档');
             $table->string('group_name', 100)->default('')->comment('分组名称');
+            $table->boolean('default_expand')->unsigned()->default(0)->comment('是否默认展示分组的子节点：0.否；1.是');
             $table->integer('sort')->unsigned()->default(100)->comment('排序：升序');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
             $table->integer('updated_time')->unsigned()->default(0)->comment('更新时间');
