@@ -59,7 +59,7 @@ class ApiService extends Service
 
     public function detail($doc_id)
     {
-        return $this->getDetailcById($doc_id);
+        return $this->getDetailcById($doc_id, ['group']);
     }
 
     public function createOrUpdate($request)

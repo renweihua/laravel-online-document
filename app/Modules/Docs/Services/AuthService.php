@@ -3,6 +3,7 @@
 namespace App\Modules\Docs\Services;
 
 use App\Exceptions\AuthException;
+use App\Exceptions\HttpStatus\UnauthorizedException;
 use App\Models\User\User;
 
 class AuthService
@@ -101,12 +102,12 @@ class AuthService
      * @param $request
      *
      * @return mixed
-     * @throws \App\Exceptions\Bbs\AuthTokenException
+     * @throws \App\Exceptions\HttpStatus\UnauthorizedException
      */
     public function me($request)
     {
         if (!$user = $request->attributes->get('login_user')){
-            throw new AuthTokenException('认证失败！');
+            throw new UnauthorizedException('认证失败！');
         }
         $user->load('userInfo');
         return $user;

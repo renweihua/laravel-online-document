@@ -28,4 +28,9 @@ class Api extends Model
     {
         return $this->belongsTo(Project::class, 'project_id', 'project_id');
     }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id', 'group_id');
+    }
 }
