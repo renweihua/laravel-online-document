@@ -29,7 +29,7 @@ Route::prefix('')->middleware([
         // Route::post('logout', 'AuthController@logout');
     });
 
-    Route::prefix('')->group(function () {
+    Route::prefix('')->middleware(CheckAuth::class)->group(function () {
         // 通用协议定义
         Route::get('properties', 'PropertyController@index');
         // 搜索会员
