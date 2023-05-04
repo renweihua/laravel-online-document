@@ -88,4 +88,17 @@ class ProjectService extends Service
 
         return $detail;
     }
+
+    public function delete($project_id)
+    {
+        // 验证登录会员的项目权限
+        $detail = $this->getProjectById($project_id);
+
+        $detail->delete();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT, OperationLog::ACTION['DELETE'], $detail);
+
+        return $detail;
+    }
 }

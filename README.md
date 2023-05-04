@@ -16,7 +16,7 @@
     - [X] 详情
     - [X] 创建
     - [X] 编辑
-    - 删除
+    - [X] 删除 /api/project/delete
 - API管理 
     - [X] 列表
     - [X] 详情

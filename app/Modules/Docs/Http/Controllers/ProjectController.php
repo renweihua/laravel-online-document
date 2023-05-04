@@ -32,4 +32,11 @@ class ProjectController extends DocsController
 
         return $this->successJson($detail, '项目`' . $detail->project_name . '`保存成功！');
     }
+
+    public function delete(ProjectIdRequest $request): JsonResponse
+    {
+        $detail = $this->service->delete($request->input('project_id'));
+
+        return $this->successJson([], '项目`' . $detail->project_name . '`删除成功！');
+    }
 }
