@@ -108,6 +108,7 @@ class AuthService
         if (!$user = $request->attributes->get('login_user')){
             throw new AuthTokenException('认证失败！');
         }
+        $user->load('userInfo');
         return $user;
     }
 

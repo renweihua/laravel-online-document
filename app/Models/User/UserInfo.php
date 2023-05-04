@@ -10,4 +10,6 @@ class UserInfo extends Model
     protected $connection = 'user_mysql';
 
     protected $primaryKey = 'user_id';
+
+    protected $appends = ['time_formatting'];
 }
