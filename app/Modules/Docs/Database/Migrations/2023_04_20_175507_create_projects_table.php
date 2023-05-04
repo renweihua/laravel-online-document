@@ -20,7 +20,7 @@ class CreateProjectsTable extends Migration
             $table->engine = 'InnoDB';
             $table->id('project_id');
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('会员Id');
-            $table->boolean('project_type')->unsigned()->default(0)->comment('项目类型：0.PC');
+            $table->boolean('project_type')->unsigned()->default(0)->comment('项目类型：0.PC；1.移动端');
             $table->string('project_name', 100)->default('')->comment('项目名称');
             $table->string('project_description', 200)->default('')->comment('项目描述');
             $table->string('project_version', 200)->default('')->comment('项目版本');

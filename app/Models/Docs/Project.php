@@ -19,6 +19,12 @@ class Project extends Model
     public function getProjectTypeTextAttribute($key)
     {
         $text = 'PC端';
+        if(!isset($this->attributes['project_type'])) return $text;
+        switch ($this->attributes['project_type']){
+            case 1:
+                $text = 'Web移动端';
+                break;
+        }
         return $text;
     }
 
