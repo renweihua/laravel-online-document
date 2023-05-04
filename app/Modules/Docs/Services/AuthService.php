@@ -3,7 +3,7 @@
 namespace App\Modules\Docs\Services;
 
 use App\Exceptions\AuthException;
-use App\Models\User;
+use App\Models\User\User;
 
 class AuthService
 {
@@ -79,7 +79,7 @@ class AuthService
         $user->update(['login_token' => $result['access_token']]);
 
         // Token存入Redis
-        // UserLoginRedisService::getInstance()->saveUserToken($result);
+        UserLoginRedisService::getInstance()->saveUserToken($result);
 
         // // 分发`登录`奖励任务
         // LoginReward::dispatch($user, get_client_info())
@@ -107,18 +107,6 @@ class AuthService
     {
         if (!$user = $request->attributes->get('login_user')){
             throw new AuthTokenException('认证失败！');
-        }
-        // 第三方登录信息
-        $user->load(['userOtherlogin']);
-        // 加载粉丝与关注人数统计
-        $user->userInfo->loadCount([
-            'fans',
-            'follows'
-        ]);
-        // 是否已签到
-        $user->userInfo->is_sign = false;
-        if ($user->userInfo->last_sign_time > 0 && date('Y-m-d') == date('Y-m-d', $user->userInfo->last_sign_time)){
-            $user->userInfo->is_sign = true;
         }
         return $user;
     }

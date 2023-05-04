@@ -3,7 +3,7 @@
 namespace App\Models\Docs;
 
 use App\Models\Model;
-use App\Models\UserInfo;
+use App\Models\User\UserInfo;
 
 class FieldMapping extends Model
 {

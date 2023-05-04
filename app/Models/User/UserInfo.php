@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
+
+use App\Models\Model;
 
 class UserInfo extends Model
 {

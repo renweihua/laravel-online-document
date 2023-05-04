@@ -4,7 +4,7 @@ namespace App\Models\Docs;
 
 use App\Exceptions\HttpStatus\ServerErrorException;
 use App\Models\Model;
-use App\Models\UserInfo;
+use App\Models\User\UserInfo;
 
 class OperationLog extends Model
 {

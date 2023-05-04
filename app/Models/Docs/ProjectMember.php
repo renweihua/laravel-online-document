@@ -3,8 +3,8 @@
 namespace App\Models\Docs;
 
 use App\Models\Model;
-use App\Models\User;
-use App\Models\UserInfo;
+use App\Models\User\User;
+use App\Models\User\UserInfo;
 
 class ProjectMember extends Model
 {

@@ -2,9 +2,7 @@
 
 namespace App\Modules\Docs\Http\Controllers;
 
-use App\Models\User;
-use App\Modules\Docs\Http\Requests\GroupRequest;
-use App\Modules\Docs\Services\GroupService;
+use App\Models\User\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
