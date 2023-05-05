@@ -2,6 +2,7 @@
 
 namespace App\Modules\Docs\Services;
 
+use App\Constants\HttpStatus;
 use App\Exceptions\Exception;
 use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
@@ -89,12 +90,10 @@ class ApiService extends Service
             if ($request->has('http_method')){
                 $detail->http_method = $request->input('http_method', '');
             }
-            $detail->object_name = $request->input('object_name');
-            $detail->function_name = $request->input('function_name');
             $detail->develop_language = $request->input('develop_language');
             $detail->http_header = $request->input('http_header', []);
             $detail->http_params = $request->input('http_params', []);
-            $detail->http_return_type = $request->input('http_return_type');
+            $detail->http_status = $request->input('http_status', HttpStatus::SUCCESS);
             $detail->response_params = $request->input('response_params', []);
             $detail->response_sample = $request->input('response_sample', []);
             $detail->save();

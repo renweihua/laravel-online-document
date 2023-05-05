@@ -26,13 +26,11 @@ class CreateApisTable extends Migration
             $table->string('api_name', 100)->default('')->comment('API名称');
             $table->string('api_description', 200)->default('')->comment('API描述');
             $table->string('http_protocol', 200)->default('')->comment('协议');
-            $table->string('object_name', 200)->default('')->comment('对象名');
-            $table->string('function_name', 200)->default('')->comment('方法名');
             $table->string('develop_language', 200)->default('')->comment('开发语言');
             $table->string('http_method', 200)->default('')->comment('Http请求方式');
             $table->json('http_header')->nullable()->comment('请求头部信息');
             $table->json('http_params')->nullable()->comment('请求参数');
-            $table->string('http_return_type', 200)->default('')->comment('http请求返回值');
+            $table->unsignedInteger('http_status')->unsigned()->default(0)->comment('http请求状态');
             $table->json('response_sample')->nullable()->comment('响应数据样例');
             $table->json('response_params')->nullable()->comment('请求响应参数');
             $table->integer('created_time')->unsigned()->default(0)->comment('创建时间');
