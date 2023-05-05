@@ -10,6 +10,16 @@ class HttpStatus
     public const SUCCESS = 200;
 
     /**
+     * @Message("Permanently Moved！")
+     */
+    public const PERMANENTLY_MOVED = 301;
+
+    /**
+     * @Message("Temporarily Moved！")
+     */
+    public const TEMPORARILY_MOVED = 302;
+
+    /**
      * @Message("Bad Request！")
      */
     public const BAD_REQUEST = 400;

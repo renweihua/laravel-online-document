@@ -2,6 +2,7 @@
 
 namespace App\Modules\Docs\Http\Controllers;
 
+use App\Constants\HttpStatus;
 use App\Models\User\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,6 +68,14 @@ class PropertyController extends DocsController
                         'null',
                     ]
                 ]
+            ],
+            'http_status' => [
+                HttpStatus::SUCCESS,
+                HttpStatus::BAD_REQUEST,
+                HttpStatus::UNAUTHORIZED,
+                HttpStatus::SERVER_ERROR,
+                HttpStatus::PERMANENTLY_MOVED,
+                HttpStatus::TEMPORARILY_MOVED,
             ],
         ];
         return $this->successJson($lists);
