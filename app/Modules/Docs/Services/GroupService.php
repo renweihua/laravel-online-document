@@ -39,7 +39,7 @@ class GroupService extends Service
                     $query->where('parent_id', '=', $parent_id);
                 }
             })
-            ->orderByDESC('group_id')
+            ->orderBy('sort')
             ->get();
 
         // Tree结构
@@ -103,5 +103,22 @@ class GroupService extends Service
         OperationLog::createLog(OperationLog::LOG_TYPE_GROUP, $create ? OperationLog::ACTION['CREATE'] : OperationLog::ACTION['UPDATE'], $detail);
 
         return $detail;
+    }
+
+    public function batchSave($param_groups)
+    {
+        $group_ids = array_column($param_groups, 'group_id');
+        $param_groups = array_column($param_groups, null, 'group_id');
+        $groups = Group::findMany($group_ids);
+        foreach ($groups as $group){
+            if (!isset($param_groups[$group->group_id])){
+                continue;
+            }
+            $param_group =  $param_groups[$group->group_id];
+            $group->parent_id = $param_group['parent_id'];
+            $group->sort = $param_group['sort'];
+            $group->save();
+        }
+        return true;
     }
 }

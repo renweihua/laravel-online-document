@@ -49,6 +49,7 @@ Route::prefix('')->middleware([
         Route::get('group-detail', 'GroupController@detail');
         Route::post('group-create', 'GroupController@createOrUpdate');
         Route::put('group-update', 'GroupController@createOrUpdate');
+        Route::put('group/batch-save', 'GroupController@batchSave');
 
         // API管理
         Route::get('apis', 'ApiController@index');
