@@ -7,6 +7,7 @@ use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
+use App\Models\Docs\ProjectMember;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -32,9 +33,33 @@ class ProjectService extends Service
                     $query->where('projects.project_type', '=', $type);
                 }
             })
+            ->select(['projects.*', 'project_members.is_leader', 'project_members.role_power'])
             ->orderByDESC('projects.project_id')
             ->groupBy('projects.project_id')
             ->paginate($this->getLimit());
+
+        // 设置权限参数
+        foreach ($lists as $item){
+            // 是否可以删除：仅创建人可删除
+            $item->can_delete = false;
+            // 是否可以编辑：1.创建人；2.读写权限的成员；3.项目管理员
+            $item->can_update = false;
+            // 是否可以查看
+            $item->can_view = false;
+
+            if ($item->user_id == $login_user_id){
+                $item->can_delete = $item->can_update = $item->can_view = true;
+            }else{
+                // 管理员与读成员，则可编辑与查看
+                if ($item->is_leader == 1 || in_array($item->role_power, [ProjectMember::ROLE_POWER_WRITE, ProjectMember::ROLE_POWER_CREATOR])){
+                    $item->can_update = $item->can_view = true;
+                }
+                // 读权限
+                if (!$item->can_view && $item->role_power == ProjectMember::ROLE_POWER_READ){
+                    $item->can_view = true;
+                }
+            }
+        }
 
         return $this->getPaginateFormat($lists);
     }
