@@ -6,6 +6,8 @@
 - Laravel:8.75
 - PHP:7.3^8.0
 
+### 示例
+![API详情](./public/demo/api-detail.jpg)
 
 ### 功能列表
 - Auth
