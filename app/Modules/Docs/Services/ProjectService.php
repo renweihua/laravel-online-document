@@ -54,8 +54,8 @@ class ProjectService extends Service
                 if ($item->is_leader == 1 || in_array($item->role_power, [ProjectMember::ROLE_POWER_WRITE, ProjectMember::ROLE_POWER_CREATOR])){
                     $item->can_update = $item->can_view = true;
                 }
-                // 读权限
-                if (!$item->can_view && $item->role_power == ProjectMember::ROLE_POWER_READ){
+                // 查看权限
+                if (!$item->can_view && ($item->is_public == 1 || $item->role_power == ProjectMember::ROLE_POWER_READ)){
                     $item->can_view = true;
                 }
             }
