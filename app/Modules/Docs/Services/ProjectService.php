@@ -122,6 +122,10 @@ class ProjectService extends Service
     {
         // 验证登录会员的项目权限
         $detail = $this->getProjectById($project_id);
+        // 创建人才可删除项目
+        if ($detail->user_id != getLoginUserId()){
+            throw new ForbiddenException('您无权限删除项目`' . $detail->project_name . '`！');
+        }
 
         $detail->delete();
 
