@@ -7,9 +7,14 @@
  *
  */
 
-function getLoginUserId()
+function getLoginUser()
 {
-    return 1;
+    return request()->attributes->get('login_user');
+}
+
+function getLoginUserId(): int
+{
+    return getLoginUser()->user_id ?? 0;
 }
 
 //快速修改.env文件

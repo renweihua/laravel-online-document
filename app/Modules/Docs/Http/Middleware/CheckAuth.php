@@ -3,6 +3,8 @@
 namespace App\Modules\Docs\Http\Middleware;
 
 use App\Constants\UserCacheKeys;
+use App\Exceptions\AuthException;
+use App\Exceptions\Exception;
 use App\Models\User\User;
 use App\Models\User\UserInfo;
 use App\Modules\Docs\Services\UserLoginRedisService;
@@ -102,7 +104,7 @@ class CheckAuth
             // 把登录会员信息追加到 request类
             $request->attributes->set('login_user', $user);
 
-        } catch (FailException $e) {
+        } catch (Exception $e) {
             return $this->errorJson($e->getMessage());
         }
 

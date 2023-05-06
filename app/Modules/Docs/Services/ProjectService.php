@@ -19,17 +19,21 @@ class ProjectService extends Service
         $type = $request->input('type', -1);
         $search = $request->input('search', '');
         $projectBuild = Project::getInstance();
-        $lists = $projectBuild
-            ->where('user_id', $login_user_id)
+        $lists = $projectBuild->leftJoin('project_members', 'projects.project_id', '=', 'project_members.project_id')
+            ->where(function ($query) use ($login_user_id){
+                $query->where('projects.user_id', $login_user_id)
+                    ->orWhere('project_members.user_id', $login_user_id);
+            })
             ->where(function ($query) use ($search, $type){
                 if (!empty($search)){
-                    $query->where('project_name', 'LIKE', trim($search) . '%');
+                    $query->where('projects.project_name', 'LIKE', trim($search) . '%');
                 }
                 if ($type > -1){
-                    $query->where('project_type', '=', $type);
+                    $query->where('projects.project_type', '=', $type);
                 }
             })
-            ->orderByDESC('project_id')
+            ->orderByDESC('projects.project_id')
+            ->groupBy('projects.project_id')
             ->paginate($this->getLimit());
 
         return $this->getPaginateFormat($lists);
