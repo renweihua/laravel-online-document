@@ -45,7 +45,7 @@ class ProjectService extends Service
         if (empty($project)){
             throw new BadRequestException('项目不存在或已删除！');
         }
-        if ($check_auth && $project->user_id != getLoginUserId()){
+        if ($check_auth && !Project::checkPower($project)){
             throw new ForbiddenException('您无权限查看项目`' . $project->project_name . '`！');
         }
         return $project;

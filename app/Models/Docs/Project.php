@@ -37,4 +37,18 @@ class Project extends Model
     {
         return self::find($id);
     }
+
+    // 验证访问权限
+    public static function checkPower($project)
+    {
+        $login_user_id = getLoginUserId();
+        // 非创建人
+        if ($project->user_id != $login_user_id){
+            // 是否为项目成员
+            if (!ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first()){
+                return false;
+            }
+        }
+        return true;
+    }
 }
