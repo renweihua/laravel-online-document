@@ -26,7 +26,7 @@ class ProjectMemberService extends Service
         }
         // 验证访问权限
         $project = Project::getDetailById($project_id);
-        Project::checkRolePowerThrow($project);
+        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_ADMIN);
 
         $type = $request->input('type', -1);
         $search = $request->input('search', '');
@@ -55,16 +55,18 @@ class ProjectMemberService extends Service
             throw new BadRequestException('项目成员不存在或已删除！');
         }
         // 验证访问权限
-        $throw_msg = '您无权限查看项目成员`' . $projectUser->userInfo->nick_name . '`！';
-        switch ($role_power){
-            case ProjectMember::ROLE_POWER_WRITE:
-                $throw_msg = '您无权限编辑项目成员`' . $projectUser->userInfo->nick_name . '`！';
-                break;
-            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
-                $throw_msg = '您无权限删除项目成员`' . $projectUser->userInfo->nick_name . '`！';
-                break;
+        if ($role_power != -1){
+            $throw_msg = '您无权限查看项目成员`' . $projectUser->userInfo->nick_name . '`！';
+            switch ($role_power){
+                case ProjectMember::ROLE_POWER_WRITE:
+                    $throw_msg = '您无权限编辑项目成员`' . $projectUser->userInfo->nick_name . '`！';
+                    break;
+                case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
+                    $throw_msg = '您无权限删除项目成员`' . $projectUser->userInfo->nick_name . '`！';
+                    break;
+            }
+            Project::checkRolePowerThrow($projectUser->project, $role_power, $throw_msg);
         }
-        Project::checkRolePowerThrow($projectUser->project, $role_power, $throw_msg);
 
         return $projectUser;
     }
@@ -78,7 +80,7 @@ class ProjectMemberService extends Service
             throw new BadRequestException('项目不存在或已删除！');
         }
         // 验证新增编辑权限
-        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_WRITE);
+        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_ADMIN);
 
         $user_id = $request->input('user_id');
         $id = $request->input('id', 0);
@@ -102,7 +104,7 @@ class ProjectMemberService extends Service
                 $detail->project_id = $project->project_id;
             }else{
                 $create = false;
-                $detail = $this->getProjectUserById($project->id, $id);
+                $detail = $this->getProjectUserById($project->id, $id, -1);
             }
 
             DB::beginTransaction();
@@ -178,7 +180,9 @@ class ProjectMemberService extends Service
     {
         $project_id = $request->input('project_id');
         // 验证登录会员的权限
-        $project = $this->getProjectById($project_id, ProjectMember::ROLE_POWER_ADMIN);
+        $project = $this->getProjectById($project_id);
+        // 验证登录会员的权限
+        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_ADMIN);
 
         $user_id = $request->input('user_id');
 
