@@ -51,11 +51,11 @@ class ProjectService extends Service
                 $item->can_delete = $item->can_update = $item->can_view = true;
             }else{
                 // 管理员与读成员，则可编辑与查看
-                if ($item->is_leader == 1 || in_array($item->role_power, [ProjectMember::ROLE_POWER_WRITE, ProjectMember::ROLE_POWER_CREATOR])){
+                if (Project::checkRolePower($item, ProjectMember::ROLE_POWER_WRITE) || Project::checkRolePower($item, ProjectMember::ROLE_POWER_ADMIN)){
                     $item->can_update = $item->can_view = true;
                 }
                 // 查看权限
-                if (!$item->can_view && ($item->is_public == 1 || $item->role_power == ProjectMember::ROLE_POWER_READ)){
+                if (!$item->can_view && Project::checkRolePower($item)){
                     $item->can_view = true;
                 }
             }
