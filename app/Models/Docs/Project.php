@@ -2,6 +2,7 @@
 
 namespace App\Models\Docs;
 
+use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Model;
 use App\Models\User\UserInfo;
 
@@ -36,6 +37,22 @@ class Project extends Model
     public static function getDetailById($id)
     {
         return self::find($id);
+    }
+
+    // 抛异常的验证项目相关权限
+    public static function checkRolePowerThrow($project, $role_power = ProjectMember::ROLE_POWER_READ, $throw_msg = '')
+    {
+        switch ($role_power){
+            case ProjectMember::ROLE_POWER_READ:
+                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`查看`项目`' . $project->project_name . '`相关！');
+                break;
+            case ProjectMember::ROLE_POWER_WRITE:
+                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`编辑`项目`' . $project->project_name . '`相关！');
+                break;
+            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
+                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`删除`项目`' . $project->project_name . '`相关配置！');
+                break;
+        }
     }
 
     // 验证项目的访问权限：role_power 0.访问权限；1.编辑权限；2.删除项目内的配置权限
