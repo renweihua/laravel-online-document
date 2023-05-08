@@ -64,6 +64,7 @@ Route::prefix('')->middleware([
         Route::post('doc-create', 'DocController@createOrUpdate');
         Route::put('doc-update', 'DocController@createOrUpdate');
         Route::patch('doc/set-top', 'DocController@setTop');
+        Route::delete('doc/delete', 'DocController@delete');
 
         // 字段映射管理
         Route::get('field-mappings', 'FieldMappingController@index');

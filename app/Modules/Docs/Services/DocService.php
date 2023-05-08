@@ -111,4 +111,17 @@ class DocService extends Service
 
         return $detail;
     }
+
+    public function delete($doc_id)
+    {
+        // 验证登录会员的项目权限
+        $detail = $this->getDocById($doc_id);
+
+        $detail->delete();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_DOC, OperationLog::ACTION['DELETE'], $detail);
+
+        return $detail;
+    }
 }

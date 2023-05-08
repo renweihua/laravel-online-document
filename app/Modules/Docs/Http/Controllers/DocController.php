@@ -42,4 +42,11 @@ class DocController extends DocsController
 
         return $this->successJson($doc, '文档`' . $doc->doc_name . '`设置成功！');
     }
+
+    public function delete(DocIdRequest $request): JsonResponse
+    {
+        $doc = $this->service->delete($request->input('doc_id'));
+
+        return $this->successJson([], '文档`' . $doc->doc_name . '`删除成功！');
+    }
 }
