@@ -24,6 +24,10 @@ class ProjectMemberService extends Service
         if (empty($project_id)) {
             return $this->getPaginateFormat([]);
         }
+        // 验证访问权限
+        $project = Project::getDetailById($project_id);
+        Project::checkRolePowerThrow($project);
+
         $type = $request->input('type', -1);
         $search = $request->input('search', '');
         $projectBuild = ProjectMember::getInstance();
