@@ -42,15 +42,16 @@ class Project extends Model
     // 抛异常的验证项目相关权限
     public static function checkRolePowerThrow($project, $role_power = ProjectMember::ROLE_POWER_READ, $throw_msg = '')
     {
+        $verify_status = self::checkRolePower($project, $role_power);
         switch ($role_power){
             case ProjectMember::ROLE_POWER_READ:
-                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`查看`项目`' . $project->project_name . '`相关！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`查看`项目`' . $project->project_name . '`相关！');
                 break;
             case ProjectMember::ROLE_POWER_WRITE:
-                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`编辑`项目`' . $project->project_name . '`相关！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`编辑`项目`' . $project->project_name . '`相关！');
                 break;
             case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
-                throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`删除`项目`' . $project->project_name . '`相关配置！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`删除`项目`' . $project->project_name . '`相关配置！');
                 break;
         }
     }
