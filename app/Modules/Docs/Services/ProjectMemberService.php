@@ -130,12 +130,14 @@ class ProjectMemberService extends Service
         return $detail;
     }
 
+    // 设置成员权限
     public function setRolePower(Request $request)
     {
         $login_user_id = getLoginUserId();
         $project_id = $request->input('project_id');
-        // 验证登录会员的项目权限
         $project = $this->getProjectById($project_id);
+        // 验证登录会员的权限
+        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_ADMIN);
 
         $user_id = $request->input('user_id');
 
@@ -175,8 +177,8 @@ class ProjectMemberService extends Service
     public function delete(Request $request)
     {
         $project_id = $request->input('project_id');
-        // 验证登录会员的项目权限
-        $project = $this->getProjectById($project_id);
+        // 验证登录会员的权限
+        $project = $this->getProjectById($project_id, ProjectMember::ROLE_POWER_ADMIN);
 
         $user_id = $request->input('user_id');
 
