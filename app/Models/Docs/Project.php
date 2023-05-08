@@ -53,6 +53,9 @@ class Project extends Model
             case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
                 if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`删除`项目`' . $project->project_name . '`相关配置！');
                 break;
+            case ProjectMember::ROLE_POWER_ADMIN:
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限设置项目`' . $project->project_name . '`相关配置！');
+                break;
         }
     }
 
@@ -65,39 +68,44 @@ class Project extends Model
         if ($project->user_id == $login_user_id){
             return true;
         }
-        if ($role_power == ProjectMember::ROLE_POWER_READ){ // 访问权限
-            // 公开项目
-            if ($project->is_public == 1){
-                return true;
-            }
-            // 项目成员皆有访问权限
-            if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first()){
-                return true;
-            }
-        }else if ($role_power == ProjectMember::ROLE_POWER_WRITE){
-            // 是否为项目成员
-            $member = ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first();
-            if (!$member){
-                return false;
-            }
-            // 项目管理员有编辑权限、项目成员有编辑权限
-            if ($member->is_leader == 1 || $member->role_power == ProjectMember::ROLE_POWER_WRITE){
-                return true;
-            }
-        }else if ($role_power == ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS){ // 删除项目内的配置权限
-            // 仅限项目创建人与管理员，可删除项目内的配置（此删除逻辑仅实现项目内的子属性相关的删除权限，项目删除仅项目创建人）
-            if ($login_user_id == $project->user_id){
-                return true;
-            }
-            // 是否为项目成员
-            $member = ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first();
-            if (!$member){
-                return false;
-            }
-            // 项目管理员有删除权限
-            if ($member->is_leader == 1){
-                return true;
-            }
+        switch ($role_power){
+            case ProjectMember::ROLE_POWER_READ: // 访问权限
+                // 公开项目
+                if ($project->is_public == 1){
+                    return true;
+                }
+                // 项目成员皆有访问权限
+                if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first()){
+                    return true;
+                }
+                break;
+            case ProjectMember::ROLE_POWER_WRITE: // 新增编辑权限
+                // 是否为项目成员
+                $member = ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first();
+                if (!$member){
+                    return false;
+                }
+                // 项目管理员有编辑权限、项目成员有编辑权限
+                if ($member->is_leader == 1 || $member->role_power == ProjectMember::ROLE_POWER_WRITE){
+                    return true;
+                }
+                break;
+            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS: // 删除项目内的配置权限
+                // 仅限项目创建人与管理员，可删除项目内的配置（此删除逻辑仅实现项目内的子属性相关的删除权限，项目删除仅项目创建人）
+            case ProjectMember::ROLE_POWER_ADMIN: // 仅限项目创建人与管理员
+                if ($login_user_id == $project->user_id){
+                    return true;
+                }
+                // 是否为项目成员
+                $member = ProjectMember::where('project_id', $project->project_id)->where('user_id', $login_user_id)->first();
+                if (!$member){
+                    return false;
+                }
+                // 项目管理员有删除权限
+                if ($member->is_leader == 1){
+                    return true;
+                }
+                break;
         }
         return false;
     }

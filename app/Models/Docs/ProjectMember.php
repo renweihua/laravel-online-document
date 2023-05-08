@@ -21,6 +21,8 @@ class ProjectMember extends Model
     const ROLE_POWER_WRITE = 1;
     // 删除项目内的配置权限（成员不设置此权限，仅用于定义使用；仅限项目创建人与管理员，可删除项目内的配置（此删除逻辑仅实现项目内的子属性相关的删除权限，项目删除仅项目创建人））
     const ROLE_POWER_DELETE_PROJECT_CHILDS = 2;
+    // 管理员权限：项目创建人、管理员
+    const ROLE_POWER_ADMIN = 3;
 
     public function user()
     {
