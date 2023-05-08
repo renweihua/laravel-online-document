@@ -45,16 +45,16 @@ class Project extends Model
         $verify_status = self::checkRolePower($project, $role_power);
         switch ($role_power){
             case ProjectMember::ROLE_POWER_READ:
-                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`查看`项目`' . $project->project_name . '`相关！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : ('您无权限`查看`项目`' . $project->project_name . '`相关！'));
                 break;
             case ProjectMember::ROLE_POWER_WRITE:
-                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`编辑`项目`' . $project->project_name . '`相关！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : ('您无权限`编辑`项目`' . $project->project_name . '`相关！'));
                 break;
             case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
-                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限`删除`项目`' . $project->project_name . '`相关配置！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : ('您无权限`删除`项目`' . $project->project_name . '`相关配置！'));
                 break;
             case ProjectMember::ROLE_POWER_ADMIN:
-                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : '您无权限设置项目`' . $project->project_name . '`相关配置！');
+                if (!$verify_status) throw new ForbiddenException($throw_msg ? $throw_msg : ('您无权限设置项目`' . $project->project_name . '`相关配置！'));
                 break;
         }
     }

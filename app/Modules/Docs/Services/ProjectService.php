@@ -64,14 +64,14 @@ class ProjectService extends Service
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getProjectById($project_id, $with = [], $check_auth = true)
+    protected function getProjectById($project_id, $check_auth = true, $throw_msg = '')
     {
-        $project = Project::with(array_merge(['userInfo'], $with))->find($project_id);
+        $project = Project::with(['userInfo'])->find($project_id);
         if (empty($project)){
             throw new BadRequestException('项目不存在或已删除！');
         }
-        if ($check_auth && !Project::checkPower($project)){
-            throw new ForbiddenException('您无权限查看项目`' . $project->project_name . '`！');
+        if ($check_auth && $project->user_id != getLoginUserId()){
+            throw new ForbiddenException($throw_msg ? $throw_msg : ('您无权限查看项目`' . $project->project_name . '`！'));
         }
         return $project;
     }
@@ -83,14 +83,18 @@ class ProjectService extends Service
 
     public function createOrUpdate($request)
     {
+        $login_user_id = getLoginUserId();
         $create = true;
         $project_id = $request->input('project_id', 0);
         if (!$project_id){
             $detail = new Project();
-            $detail->user_id = getLoginUserId();
+            $detail->user_id = $login_user_id;
         }else{
             $create = false;
-            $detail = $this->getProjectById($project_id);
+            $detail = $this->getProjectById($project_id, false);
+            if ($detail->user_id != $login_user_id){
+                throw new ForbiddenException('您无权限编辑项目`' . $detail->project_name . '`！');
+            }
         }
 
         DB::beginTransaction();
@@ -121,7 +125,7 @@ class ProjectService extends Service
     public function delete($project_id)
     {
         // 验证登录会员的项目权限
-        $detail = $this->getProjectById($project_id);
+        $detail = $this->getProjectById($project_id, false);
         // 创建人才可删除项目
         if ($detail->user_id != getLoginUserId()){
             throw new ForbiddenException('您无权限删除项目`' . $detail->project_name . '`！');
