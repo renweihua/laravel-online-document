@@ -25,8 +25,8 @@ Route::prefix('')->middleware([
         Route::match(['get', 'post'], 'login', 'AuthController@login');
         // 登录会员信息
         Route::match(['get', 'post'], 'me', 'AuthController@me')->middleware(CheckAuth::class);
-        // // 退出登录
-        // Route::post('logout', 'AuthController@logout');
+        // 退出登录
+        Route::post('logout', 'AuthController@logout');
     });
 
     Route::prefix('')->middleware(CheckAuth::class)->group(function () {
@@ -39,31 +39,31 @@ Route::prefix('')->middleware([
 
         // 项目管理
         Route::get('projects', 'ProjectController@index');
-        Route::get('project-detail', 'ProjectController@detail');
-        Route::post('project-create', 'ProjectController@createOrUpdate');
-        Route::put('project-update', 'ProjectController@createOrUpdate');
+        Route::get('project/detail', 'ProjectController@detail');
+        Route::post('project/create', 'ProjectController@createOrUpdate');
+        Route::put('project/update', 'ProjectController@createOrUpdate');
         Route::delete('project/delete', 'ProjectController@delete');
 
         // 分组管理
         Route::get('groups', 'GroupController@index');
         Route::get('group-detail', 'GroupController@detail');
-        Route::post('group-create', 'GroupController@createOrUpdate');
-        Route::put('group-update', 'GroupController@createOrUpdate');
+        Route::post('group/create', 'GroupController@createOrUpdate');
+        Route::put('group/update', 'GroupController@createOrUpdate');
         Route::put('group/batch-save', 'GroupController@batchSave');
         Route::delete('group/delete', 'GroupController@delete');
 
         // API管理
         Route::get('apis', 'ApiController@index');
-        Route::get('api-detail', 'ApiController@detail');
-        Route::post('api-create', 'ApiController@createOrUpdate');
-        Route::put('api-update', 'ApiController@createOrUpdate');
-        Route::delete('api-delete', 'ApiController@delete');
+        Route::get('api/detail', 'ApiController@detail');
+        Route::post('api/create', 'ApiController@createOrUpdate');
+        Route::put('api/update', 'ApiController@createOrUpdate');
+        Route::delete('api/delete', 'ApiController@delete');
 
         // 文档管理
         Route::get('docs', 'DocController@index');
-        Route::get('doc-detail', 'DocController@detail');
-        Route::post('doc-create', 'DocController@createOrUpdate');
-        Route::put('doc-update', 'DocController@createOrUpdate');
+        Route::get('doc/detail', 'DocController@detail');
+        Route::post('doc/create', 'DocController@createOrUpdate');
+        Route::put('doc/update', 'DocController@createOrUpdate');
         Route::patch('doc/set-top', 'DocController@setTop');
         Route::delete('doc/delete', 'DocController@delete');
 
