@@ -4,12 +4,8 @@ namespace App\Modules\Docs\Http\Controllers;
 
 use App\Modules\Docs\Http\Requests\ApiIdRequest;
 use App\Modules\Docs\Http\Requests\ApiRequest;
-use App\Modules\Docs\Http\Requests\DocIdRequest;
-use App\Modules\Docs\Http\Requests\DocRequest;
-use App\Modules\Docs\Http\Requests\ProjectIdRequest;
 use App\Modules\Docs\Services\ApiService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ApiController extends DocsController
 {
