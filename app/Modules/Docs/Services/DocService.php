@@ -8,6 +8,7 @@ use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Doc;
 use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
+use App\Models\Docs\ProjectMember;
 use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,10 @@ class DocService extends Service
         if (empty($project_id)) {
             return $this->getPaginateFormat([]);
         }
+        // 验证访问权限
+        $project = Project::getDetailById($project_id);
+        Project::checkRolePowerThrow($project);
+
         $group_id = $request->input('group_id', 0);
         $search = $request->input('search', '');
         $docBuild = Doc::with('userInfo');
@@ -45,15 +50,24 @@ class DocService extends Service
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getDocById($doc_id, $with = [], $check_auth = true)
+    protected function getDocById($doc_id, $role_power = ProjectMember::ROLE_POWER_READ)
     {
-        $doc = Doc::with(array_merge(['project', 'userInfo'], $with))->find($doc_id);
+        $doc = Doc::with(['project', 'userInfo'])->find($doc_id);
         if (empty($doc)){
             throw new BadRequestException('文档不存在或已删除！');
         }
-        if ($check_auth && $doc->user_id != getLoginUserId()){
-            throw new ForbiddenException('您无权限查看文档`' . $doc->project_name . '`！');
+        // 验证访问权限
+        $throw_msg = '您无权限查看文档`' . $doc->doc_name . '`！';
+        switch ($role_power){
+            case ProjectMember::ROLE_POWER_WRITE:
+                $throw_msg = '您无权限编辑文档`' . $doc->doc_name . '`！';
+                break;
+            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
+                $throw_msg = '您无权限删除文档`' . $doc->doc_name . '`！';
+                break;
         }
+        Project::checkRolePowerThrow($doc->project, $role_power, $throw_msg);
+
         return $doc;
     }
 
@@ -67,12 +81,20 @@ class DocService extends Service
         $create = true;
         $doc_id = $request->input('doc_id', 0);
         if (!$doc_id){
+            $project_id = $request->input('project_id');
+            $project = Project::getDetailById($project_id);
+            if (!$project){
+                throw new BadRequestException('项目不存在或已删除！');
+            }
+            // 验证新增编辑权限
+            Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_WRITE);
+
             $detail = new Doc();
             $detail->user_id = getLoginUserId();
-            $detail->project_id = $request->input('project_id');
+            $detail->project_id = $project->project_id;
         }else{
             $create = false;
-            $detail = $this->getDocById($doc_id);
+            $detail = $this->getDocById($doc_id, ProjectMember::ROLE_POWER_WRITE);
         }
 
         DB::beginTransaction();
@@ -104,7 +126,7 @@ class DocService extends Service
 
     public function setTop($doc_id, $is_top)
     {
-        $detail = $this->getDocById($doc_id);
+        $detail = $this->getDocById($doc_id, ProjectMember::ROLE_POWER_WRITE);
 
         $detail->is_top = $is_top;
         $detail->save();
@@ -115,7 +137,7 @@ class DocService extends Service
     public function delete($doc_id)
     {
         // 验证登录会员的项目权限
-        $detail = $this->getDocById($doc_id);
+        $detail = $this->getDocById($doc_id, ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS);
 
         $detail->delete();
 

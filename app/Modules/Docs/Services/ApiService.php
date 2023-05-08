@@ -67,6 +67,7 @@ class ApiService extends Service
                 break;
         }
         Project::checkRolePowerThrow($detail->project, $role_power, $throw_msg);
+
         return $detail;
     }
 
@@ -87,7 +88,7 @@ class ApiService extends Service
             }
             // 验证新增编辑权限
             Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_WRITE);
-            
+
             $detail = new Api();
             $detail->user_id = getLoginUserId();
             $detail->project_id = $project->project_id;
