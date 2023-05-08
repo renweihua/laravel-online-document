@@ -163,14 +163,11 @@ class ProjectMemberService extends Service
         return $member;
     }
 
-    protected function getProjectById($project_id, $check_auth = true)
+    protected function getProjectById($project_id)
     {
         $project = Project::getDetailById($project_id);
         if (empty($project)){
             throw new BadRequestException('项目不存在或已删除！');
-        }
-        if ($check_auth && $project->user_id != getLoginUserId()){
-            throw new ForbiddenException('您无权设置项目成员');
         }
         return $project;
     }

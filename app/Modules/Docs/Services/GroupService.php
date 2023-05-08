@@ -7,6 +7,8 @@ use App\Exceptions\HttpStatus\BadRequestException;
 use App\Exceptions\HttpStatus\ForbiddenException;
 use App\Models\Docs\Group;
 use App\Models\Docs\OperationLog;
+use App\Models\Docs\Project;
+use App\Models\Docs\ProjectMember;
 use App\Services\Service;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +22,10 @@ class GroupService extends Service
         if (empty($project_id)) {
             return $this->getPaginateFormat([]);
         }
+        // 验证访问权限
+        $project = Project::getDetailById($project_id);
+        Project::checkRolePowerThrow($project);
+
         $parent_id = $request->input('parent_id', 0);
         $group_type = $request->input('group_type', Group::GROUP_TYPE_API);
         $search = $request->input('search', '');
@@ -50,19 +56,28 @@ class GroupService extends Service
 
     protected function getGroupById($doc_id, $role_power = ProjectMember::ROLE_POWER_READ)
     {
-        $doc = Group::with(array_merge(['project', 'userInfo'], $with))->find($doc_id);
-        if (empty($doc)){
-            throw new BadRequestException('文档不存在或已删除！');
+        $detail = Group::with(['project', 'userInfo'])->find($doc_id);
+        if (empty($detail)){
+            throw new BadRequestException('分组不存在或已删除！');
         }
-        if ($check_auth && $doc->user_id != getLoginUserId()){
-            throw new ForbiddenException('您无权限查看文档`' . $doc->project_name . '`！');
+        // 验证访问权限
+        $throw_msg = '您无权限查看分组`' . $detail->group_name . '`！';
+        switch ($role_power){
+            case ProjectMember::ROLE_POWER_WRITE:
+                $throw_msg = '您无权限编辑分组`' . $detail->group_name . '`！';
+                break;
+            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
+                $throw_msg = '您无权限删除分组`' . $detail->group_name . '`！';
+                break;
         }
-        return $doc;
+        Project::checkRolePowerThrow($detail->project, $role_power, $throw_msg);
+
+        return $detail;
     }
 
     public function detail($group_id)
     {
-        return $this->getDocById($group_id);
+        return $this->getGroupById($group_id);
     }
 
     public function createOrUpdate($request)
@@ -70,13 +85,21 @@ class GroupService extends Service
         $create = true;
         $group_id = $request->input('group_id', 0);
         if (!$group_id){
+            $project_id = $request->input('project_id');
+            $project = Project::getDetailById($project_id);
+            if (!$project){
+                throw new BadRequestException('项目不存在或已删除！');
+            }
+            // 验证新增编辑权限
+            Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_WRITE);
+
             $detail = new Group();
             $detail->user_id = getLoginUserId();
-            $detail->project_id = $request->input('project_id');
+            $detail->project_id = $project->project_id;
             $detail->group_type = $request->input('group_type');
         }else{
             $create = false;
-            $detail = $this->getDocById($group_id);
+            $detail = $this->getGroupById($group_id, ProjectMember::ROLE_POWER_WRITE);
         }
 
         DB::beginTransaction();
@@ -125,7 +148,7 @@ class GroupService extends Service
     public function delete($group_id)
     {
         // 验证登录会员的权限
-        $detail = $this->getGroupById($group_id);
+        $detail = $this->getGroupById($group_id, ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS);
 
         $detail->delete();
 

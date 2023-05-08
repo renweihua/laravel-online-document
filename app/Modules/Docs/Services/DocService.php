@@ -136,7 +136,7 @@ class DocService extends Service
 
     public function delete($doc_id)
     {
-        // 验证登录会员的项目权限
+        // 验证登录会员的权限
         $detail = $this->getDocById($doc_id, ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS);
 
         $detail->delete();
