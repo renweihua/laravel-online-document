@@ -48,12 +48,24 @@ class ProjectMemberService extends Service
         return $this->getPaginateFormat($lists);
     }
 
-    protected function getProjectUserById($project_id, $id, $with = [], $check_auth = true)
+    protected function getProjectUserById($project_id, $id, $role_power = ProjectMember::ROLE_POWER_READ)
     {
-        $projectUser = ProjectMember::with(array_merge(['project'], $with))->where('project_id', $project_id)->find($id);
+        $projectUser = ProjectMember::with(['project', 'userInfo'])->where('project_id', $project_id)->find($id);
         if (empty($projectUser)){
             throw new BadRequestException('项目成员不存在或已删除！');
         }
+        // 验证访问权限
+        $throw_msg = '您无权限查看项目成员`' . $projectUser->userInfo->nick_name . '`！';
+        switch ($role_power){
+            case ProjectMember::ROLE_POWER_WRITE:
+                $throw_msg = '您无权限编辑项目成员`' . $projectUser->userInfo->nick_name . '`！';
+                break;
+            case ProjectMember::ROLE_POWER_DELETE_PROJECT_CHILDS:
+                $throw_msg = '您无权限删除项目成员`' . $projectUser->userInfo->nick_name . '`！';
+                break;
+        }
+        Project::checkRolePowerThrow($projectUser->project, $role_power, $throw_msg);
+
         return $projectUser;
     }
 
@@ -61,8 +73,13 @@ class ProjectMemberService extends Service
     {
         $login_user_id = getLoginUserId();
         $project_id = $request->input('project_id');
-        // 验证登录会员的项目权限
         $project = $this->getProjectById($project_id);
+        if (!$project){
+            throw new BadRequestException('项目不存在或已删除！');
+        }
+        // 验证新增编辑权限
+        Project::checkRolePowerThrow($project, ProjectMember::ROLE_POWER_WRITE);
+
         $user_id = $request->input('user_id');
         $id = $request->input('id', 0);
 
@@ -79,6 +96,7 @@ class ProjectMemberService extends Service
                 if (ProjectMember::where('project_id', $project->project_id)->where('user_id', $user_id)->first()){
                     throw new BadRequestException('该会员已成为项目成员！');
                 }
+
                 $detail = new ProjectMember();
                 $detail->user_id = $user_id;
                 $detail->project_id = $project->project_id;
