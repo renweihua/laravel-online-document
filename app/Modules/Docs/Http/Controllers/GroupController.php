@@ -2,11 +2,12 @@
 
 namespace App\Modules\Docs\Http\Controllers;
 
+use App\Modules\Docs\Http\Requests\ApiIdRequest;
 use App\Modules\Docs\Http\Requests\GroupBatchSaveRequest;
+use App\Modules\Docs\Http\Requests\GroupIdRequest;
 use App\Modules\Docs\Http\Requests\GroupRequest;
 use App\Modules\Docs\Services\GroupService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class GroupController extends DocsController
 {
@@ -33,5 +34,12 @@ class GroupController extends DocsController
         $this->service->batchSave($request->input('groups'));
 
         return $this->successJson([], '分组设置成功！');
+    }
+
+    public function delete(GroupIdRequest $request): JsonResponse
+    {
+        $detail = $this->service->delete($request->input('group_id'));
+
+        return $this->successJson([], '分组`' . $detail->group_name . '`删除成功！');
     }
 }

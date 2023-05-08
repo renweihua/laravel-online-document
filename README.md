@@ -18,6 +18,7 @@
     - [X] 创建
     - [X] 编辑
     - [X] 批量更新分组排序与归属父级 /api/group/batch-save
+    - [X] 删除 /api/group/delete
 - 项目管理 
     - [X] 列表
     - [X] 详情

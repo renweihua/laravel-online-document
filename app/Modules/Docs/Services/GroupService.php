@@ -48,7 +48,7 @@ class GroupService extends Service
         return $lists;
     }
 
-    protected function getDocById($doc_id, $with = [], $check_auth = true)
+    protected function getGroupById($doc_id, $role_power = ProjectMember::ROLE_POWER_READ)
     {
         $doc = Group::with(array_merge(['project', 'userInfo'], $with))->find($doc_id);
         if (empty($doc)){
@@ -120,5 +120,18 @@ class GroupService extends Service
             $group->save();
         }
         return true;
+    }
+
+    public function delete($group_id)
+    {
+        // 验证登录会员的权限
+        $detail = $this->getGroupById($group_id);
+
+        $detail->delete();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_GROUP, OperationLog::ACTION['DELETE'], $detail);
+
+        return $detail;
     }
 }
