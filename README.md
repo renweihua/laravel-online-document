@@ -56,7 +56,7 @@
       - 必须是项目创建人与管理员
     - [X] 设置权限 /api/project-member/set-role-power
       - 必须是项目创建人与管理员
-    - [ ] 设为项目管理员
+    - [X] 设置成员的管理员权限 /api/project-member/set-leader
       - 必须是项目创建人
 - 操作日志
     - [X] 列表 /api/operation-logs

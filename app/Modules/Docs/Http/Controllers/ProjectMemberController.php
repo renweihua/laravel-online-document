@@ -3,6 +3,7 @@
 namespace App\Modules\Docs\Http\Controllers;
 
 use App\Modules\Docs\Http\Requests\ProjectMemberRequest;
+use App\Modules\Docs\Http\Requests\ProjectMemberSetLeaderRequest;
 use App\Modules\Docs\Http\Requests\ProjectMemberSetRolePowerRequest;
 use App\Modules\Docs\Services\ProjectMemberService;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,13 @@ class ProjectMemberController extends DocsController
         $detail = $this->service->setRolePower($request);
 
         return $this->successJson($detail, '项目成员`' . $detail->userInfo->nick_name . '`权限设置成功！');
+    }
+
+    public function setLeader(ProjectMemberSetLeaderRequest $request): JsonResponse
+    {
+        $detail = $this->service->setLeader($request);
+
+        return $this->successJson($detail, '项目成员`' . $detail->userInfo->nick_name . '`管理员权限设置成功！');
     }
 
     public function delete(ProjectMemberRequest $request): JsonResponse

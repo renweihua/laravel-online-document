@@ -79,7 +79,8 @@ Route::prefix('')->middleware([
         Route::get('project-member/detail', 'ProjectMemberController@detail');
         Route::post('project-member/create', 'ProjectMemberController@createOrUpdate');
         Route::put('project-member/update', 'ProjectMemberController@createOrUpdate');
-        Route::delete('project-member/delete', 'ProjectMemberController@delete');
         Route::patch('project-member/set-role-power', 'ProjectMemberController@setRolePower');
+        Route::patch('project-member/set-leader', 'ProjectMemberController@setLeader');
+        Route::delete('project-member/delete', 'ProjectMemberController@delete');
     });
 });

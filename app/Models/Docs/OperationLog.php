@@ -15,6 +15,7 @@ class OperationLog extends Model
         'UPDATE' => 'UPDATE',
         'DELETE' => 'DELETE',
         'ROLE_POWER' => 'ROLE_POWER',
+        'IS_LEADER' => 'IS_LEADER',
         'query' => ['query', '查询'],
         'restore' => ['restore', '恢复'],
     ];
@@ -23,6 +24,7 @@ class OperationLog extends Model
         'UPDATE' => '编辑',
         'DELETE' => '删除',
         'ROLE_POWER' => '设置权限',
+        'IS_LEADER' => '设置管理员权限',
         'query' => ['query', '查询'],
         'restore' => ['restore', '恢复'],
     ];

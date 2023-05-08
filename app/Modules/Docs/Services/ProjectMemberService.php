@@ -167,6 +167,42 @@ class ProjectMemberService extends Service
         return $member;
     }
 
+    // 设置成员是否为管理员
+    public function setLeader(Request $request)
+    {
+        $login_user_id = getLoginUserId();
+        $project_id = $request->input('project_id');
+        $project = $this->getProjectById($project_id);
+        if ($project->user_id != $login_user_id){
+            throw new ForbiddenException('仅限项目创建人可设置成员的管理员权限！');
+        }
+
+        $user_id = $request->input('user_id');
+
+        $lock_key = 'set:project:mermber:power:' . $user_id;
+        $lock = Cache::lock($lock_key, 60);
+        try{
+            $member = ProjectMember::where('project_id', $project->project_id)
+                ->where('user_id', $user_id)
+                ->lock()
+                ->first();
+            if (!$member){
+                throw new BadRequestException('项目成员不存在或已删除！');
+            }
+            $member->is_leader = $request->input('is_leader', 0);
+            $member->save();
+        }catch (Exception $e){
+            throw new BadRequestException($e->getMessage());
+        } finally {
+            Cache::restoreLock($lock_key, $lock->owner());
+        }
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_PROJECT_MEMBER, OperationLog::ACTION['IS_LEADER'], $member);
+
+        return $member;
+    }
+
     protected function getProjectById($project_id)
     {
         $project = Project::getDetailById($project_id);
