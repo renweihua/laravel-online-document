@@ -36,6 +36,13 @@ class GroupController extends DocsController
         return $this->successJson([], '分组设置成功！');
     }
 
+    public function setDefaultExpand(GroupIdRequest $request): JsonResponse
+    {
+        $detail = $this->service->setDefaultExpand($request);
+
+        return $this->successJson([], '分组`' . $detail->group_name . '`默认节点设置成功！');
+    }
+
     public function delete(GroupIdRequest $request): JsonResponse
     {
         $detail = $this->service->delete($request->input('group_id'));

@@ -10,6 +10,7 @@ use App\Models\Docs\OperationLog;
 use App\Models\Docs\Project;
 use App\Models\Docs\ProjectMember;
 use App\Services\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GroupService extends Service
@@ -143,6 +144,22 @@ class GroupService extends Service
             $group->save();
         }
         return true;
+    }
+
+    public function setDefaultExpand(Request $request)
+    {
+        $group_id = $request->input('group_id');
+
+        // 验证登录会员的权限
+        $detail = $this->getGroupById($group_id, ProjectMember::ROLE_POWER_WRITE);
+
+        $detail->default_expand = $request->input('default_expand', 0);
+        $detail->save();
+
+        // 记录操作日志
+        OperationLog::createLog(OperationLog::LOG_TYPE_GROUP, OperationLog::ACTION['UPDATE'], $detail);
+
+        return $detail;
     }
 
     public function delete($group_id)

@@ -50,6 +50,7 @@ Route::prefix('')->middleware([
         Route::post('group/create', 'GroupController@createOrUpdate');
         Route::put('group/update', 'GroupController@createOrUpdate');
         Route::put('group/batch-save', 'GroupController@batchSave');
+        Route::patch('group/set-default-expand', 'GroupController@setDefaultExpand');
         Route::delete('group/delete', 'GroupController@delete');
 
         // API管理

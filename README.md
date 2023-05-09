@@ -27,6 +27,7 @@
     - [X] 编辑 /api/group/update
     - [X] 批量更新分组排序与归属父级 /api/group/batch-save
     - [X] 删除 /api/group/delete
+    - [X] 是否默认打开子节点 /api/group/set-default-expand
 - [X] API管理 
     - [X] 列表 /api/apis
     - [X] 详情 /api/api/detail
